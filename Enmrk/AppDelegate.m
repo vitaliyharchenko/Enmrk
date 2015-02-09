@@ -44,6 +44,19 @@
     [self saveContext];
 }
 
+#pragma mark - Custom
+
+- (void)initWindowAfterLogin {
+    UIStoryboard *sb = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+    UIViewController *vc = [sb instantiateViewControllerWithIdentifier:@"Navigation"];
+    self.window.rootViewController = vc;
+    [UIView transitionWithView:self.window
+                      duration:0.5
+                       options:UIViewAnimationOptionTransitionCrossDissolve
+                    animations:^{ self.window.rootViewController = vc; }
+                    completion:nil];
+}
+
 #pragma mark - Core Data stack
 
 @synthesize managedObjectContext = _managedObjectContext;
