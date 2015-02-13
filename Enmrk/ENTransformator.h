@@ -10,17 +10,20 @@
 
 @interface ENTransformator : NSObject
 
-@property (strong,nonatomic) NSNumber *transformator_id;
-@property (strong,nonatomic) NSString *mark;
-@property (strong,nonatomic) NSString *conection;
-@property (strong,nonatomic) NSString *producer;
+@property (strong,nonatomic) NSNumber *id;
+@property (strong,nonatomic) NSNumber *mark;
+@property (strong,nonatomic) NSNumber *conection;
+@property (strong,nonatomic) NSNumber *producer;
 @property (strong,nonatomic) NSNumber *power;
 @property (strong,nonatomic) NSNumber *upVoltage;
 @property (strong,nonatomic) NSNumber *downVoltage;
 @property (strong,nonatomic) NSNumber *year;
-//@property (strong,nonatomic) NSString *description;
+@property (strong,nonatomic) NSNumber *sync;
+@property (strong,nonatomic) NSString *about;
 
 + (NSMutableArray *)initTestArray;
-+ (NSMutableDictionary *)initMenuDictionary;
++ (NSDictionary *)initMenuDictionary;
++ (NSArray *)initMenuArray;
++ (ENTransformator *)initTransformatorWithOptions:(NSMutableDictionary *)selectedOptions;
 
 @end

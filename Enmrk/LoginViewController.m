@@ -36,16 +36,31 @@
 */
 
 - (IBAction)loginButton:(id)sender {
-    NSString *email = self.emailField.text;
-    NSString *password = self.passwordField.text;
+    [self.activityIndicator setHidden:NO];
+    [self.activityIndicator startAnimating];
     
-    if ([email isEqualToString:@"test"] && [password isEqualToString:@"test"]) {
-        NSLog(@"Success auth");
-        // go to main navigation
+    //    NSString *email = self.emailField.text;
+    //    NSString *password = self.passwordField.text;
+    
+    AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+    //    manager.responseSerializer.acceptableContentTypes = [NSSet setWithObject:@"text/html"];
+    [manager POST:@"http://enmrk.ru/api/auth/" parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        
+        NSString *status = [responseObject objectForKey:@"status"];
+        NSString *rdn = [responseObject objectForKey:@"rdn"];
+        
+        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Все окей" message:status delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+        [alertView show];
+        [self.activityIndicator setHidden:YES];
+        
         AppDelegate *app = [[UIApplication sharedApplication] delegate];
         [app initWindowAfterLogin];
-    } else {
-        NSLog(@"Auth error");
-    }
+        
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        NSLog(@"API Auth Connection Error: %@", error);
+        
+        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Error" message:[error localizedDescription] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+        [alertView show];
+    }];
 }
 @end

@@ -11,9 +11,7 @@
 
 @interface DetailViewController : UIViewController
 
-@property (weak, nonatomic) IBOutlet UILabel *label;
 @property (strong,nonatomic) ENTransformator *transformator;
-
-- (void)setTransformatorData:(ENTransformator *)transformator;
+@property (weak, nonatomic) IBOutlet UILabel *label;
 
 @end

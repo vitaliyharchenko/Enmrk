@@ -7,8 +7,11 @@
 //
 
 #import "DetailViewController.h"
+#import "ENTransformator.h"
 
 @interface DetailViewController ()
+
+@property NSDictionary *options;
 
 @end
 
@@ -17,17 +20,27 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    self.options = [ENTransformator initMenuDictionary];
+    
     self.navigationItem.title = @"Карточка товара";
-    _label.text = [NSString stringWithFormat:@"%@ %@", _transformator.transformator_id, _transformator.mark];
+
+    NSString *text = [NSString stringWithFormat:@"%ld %@ %@ %@ %@ %@ %@ %@",
+        (long)[_transformator.id integerValue],
+        [[_options objectForKey:@"Марка"] objectAtIndex:[_transformator.mark integerValue]],
+        [[_options objectForKey:@"Соединение"] objectAtIndex:[_transformator.conection integerValue]],
+        [[_options objectForKey:@"Производитель"] objectAtIndex:[_transformator.producer integerValue]],
+        [[_options objectForKey:@"Мощность"] objectAtIndex:[_transformator.power integerValue]],
+        [[_options objectForKey:@"Верхнее напряжение"] objectAtIndex:[_transformator.upVoltage integerValue]],
+        [[_options objectForKey:@"Нижнее напряжение"] objectAtIndex:[_transformator.downVoltage integerValue]],
+        [[_options objectForKey:@"Год выпуска"] objectAtIndex:[_transformator.year integerValue]]
+    ];
+    
+    _label.text = text;
 }
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
-}
-
-- (void)setTransformatorData:(ENTransformator *)transformator {
-    _transformator = transformator;
 }
 
 /*

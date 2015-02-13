@@ -10,6 +10,12 @@
 
 @interface AddViewController : UITableViewController <UITableViewDataSource, UITableViewDelegate>
 
+@property NSMutableDictionary *selectedOptions;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *addButton;
+@property (nonatomic, strong) NSString *about;
+
+- (void)enableDoneButton:(BOOL)enable;
 - (IBAction)unwindToList:(UIStoryboardSegue *)segue;
+- (IBAction)unwindFromAbout:(UIStoryboardSegue *)segue;
 
 @end

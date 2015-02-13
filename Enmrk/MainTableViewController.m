@@ -13,7 +13,10 @@
 
 @interface MainTableViewController ()
 
+@property NSDictionary *options;
+
 @end
+
 
 @implementation MainTableViewController
 
@@ -23,6 +26,7 @@
     self.navigationItem.title = @"Трансформаторы";
     
     self.transformators = [ENTransformator initTestArray];
+    self.options = [ENTransformator initMenuDictionary];
     [self.tableView reloadData];
     
     // Uncomment the following line to preserve selection between presentations.
@@ -30,6 +34,17 @@
     
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
+}
+
+- (IBAction)unwindToList:(UIStoryboardSegue *)segue {
+    AddViewController *source = [segue sourceViewController];
+    [self.transformators insertObject:[ENTransformator initTransformatorWithOptions:source.selectedOptions] atIndex:0];
+    [self.tableView reloadData];
+}
+
+- (IBAction)logoutAction:(id)sender {
+    AppDelegate *app = [[UIApplication sharedApplication] delegate];
+    [app initWindowWithLogin];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -46,26 +61,42 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     if (_transformators) {
-        return ([_transformators count] - 1);
+        return ([_transformators count]+1);
     } else {
         return 0;
     }
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Transformator Cell" forIndexPath:indexPath];
     
-    if (_transformators) {
-        ENTransformator *transformator = [_transformators objectAtIndex:indexPath.row];
-        cell.textLabel.text = [NSString stringWithFormat:@"%@ %@", transformator.transformator_id, transformator.mark];
+    if ([indexPath row] == 0) {
+        UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Add Cell" forIndexPath:indexPath];
+        return cell;
+    } else {
+        UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Transformator Cell" forIndexPath:indexPath];
+        
+        if (_transformators) {
+            ENTransformator *transformator = [_transformators objectAtIndex:indexPath.row-1];
+            NSString *text = [NSString stringWithFormat:@"%ld %@ %@ %@ %@ %@ %@ %@",
+                (long)[transformator.id integerValue],
+                [[_options objectForKey:@"Марка"] objectAtIndex:[transformator.mark integerValue]],
+                [[_options objectForKey:@"Соединение"] objectAtIndex:[transformator.conection integerValue]],
+                [[_options objectForKey:@"Производитель"] objectAtIndex:[transformator.producer integerValue]],
+                [[_options objectForKey:@"Мощность"] objectAtIndex:[transformator.power integerValue]],
+                [[_options objectForKey:@"Верхнее напряжение"] objectAtIndex:[transformator.upVoltage integerValue]],
+                [[_options objectForKey:@"Нижнее напряжение"] objectAtIndex:[transformator.downVoltage integerValue]],
+                [[_options objectForKey:@"Год выпуска"] objectAtIndex:[transformator.year integerValue]]
+            ];
+            
+            if ([transformator.sync isEqualToNumber:[NSNumber numberWithBool:NO]]) {
+                cell.backgroundColor = [UIColor colorWithRed:81/255.0f green:218/255.0f blue:132/255.0f alpha:0.5f];
+            }
+            
+            cell.textLabel.text = text;
+        }
+        
+        return cell;
     }
-    
-    return cell;
-}
-
-- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    return 95.0;
 }
 
 /*
@@ -106,11 +137,12 @@
 
 // In a storyboard-based application, you will often want to do a little preparation before navigation
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    
-    NSIndexPath *indexPath = [self.tableView indexPathForSelectedRow];
-    if (indexPath) {
-        ENTransformator *transformator = [_transformators objectAtIndex:indexPath.row];
-        [segue.destinationViewController setTransformatorData:transformator];
+    if ([[segue identifier] isEqualToString:@"detailSegue"]) {
+        NSIndexPath *indexPath = [self.tableView indexPathForSelectedRow];
+        if (indexPath) {
+            ENTransformator *transformator = [_transformators objectAtIndex:indexPath.row-1];
+            [segue.destinationViewController setTransformator:transformator];
+        }
     }
 }
 @end

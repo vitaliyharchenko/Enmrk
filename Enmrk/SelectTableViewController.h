@@ -11,13 +11,10 @@
 
 @interface SelectTableViewController : UITableViewController
 
-@property (nonatomic, strong) NSMutableArray *selectedOptions;
-@property (nonatomic, strong) NSMutableDictionary *options;
+@property (nonatomic, strong) NSMutableDictionary *selectedOptions;
+@property (nonatomic, strong) NSDictionary *options;
 @property (nonatomic, strong) NSString *key;
-@property (nonatomic, strong) NSNumber *keyRow;
 
 @property (nonatomic, weak) AddViewController *addViewController;
-
-- (void)setHeader:(NSString *)text;
 
 @end

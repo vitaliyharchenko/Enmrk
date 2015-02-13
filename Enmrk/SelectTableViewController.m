@@ -8,6 +8,7 @@
 
 #import "SelectTableViewController.h"
 #import "AddViewController.h"
+#import "AppDelegate.h"
 
 @interface SelectTableViewController ()
 
@@ -20,22 +21,13 @@
 - (void)viewDidLoad {
     [super viewDidLoad];    
     self.optionValues = [_options objectForKey:_key];
+    self.navigationItem.title = _key;
     [self.tableView reloadData];
-    
-    // Uncomment the following line to preserve selection between presentations.
-    // self.clearsSelectionOnViewWillAppear = NO;
-    
-    // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-    // self.navigationItem.rightBarButtonItem = self.editButtonItem;
 }
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
-}
-
-- (void)setHeader:(NSString *)text{
-    self.navigationItem.title = text;
 }
 
 #pragma mark - Table view data source
@@ -55,7 +47,7 @@
     NSString *string = [NSString stringWithFormat:@"%@",object];
     
     NSInteger selectedPath = [indexPath row]+1;
-    NSInteger selectedOption = [[_selectedOptions objectAtIndex:[_keyRow integerValue]] integerValue];
+    NSInteger selectedOption = [[_selectedOptions objectForKey:_key] integerValue];
     
     if (selectedPath == selectedOption) {
         [cell setAccessoryType:UITableViewCellAccessoryCheckmark];
@@ -67,47 +59,31 @@
 }
 
 
-/*
-// Override to support conditional editing of the table view.
-- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
-    // Return NO if you do not want the specified item to be editable.
-    return YES;
-}
-*/
-
-/*
-// Override to support editing the table view.
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (editingStyle == UITableViewCellEditingStyleDelete) {
-        // Delete the row from the data source
-        [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
-    } else if (editingStyle == UITableViewCellEditingStyleInsert) {
-        // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-    }   
-}
-*/
-
-/*
-// Override to support rearranging the table view.
-- (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath {
-}
-*/
-
-/*
-// Override to support conditional rearranging of the table view.
-- (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath {
-    // Return NO if you do not want the item to be re-orderable.
-    return YES;
-}
-*/
-
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
-{
+// In a storyboard-based application, you will often want to do a little preparation before navigation
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    NSIndexPath *indexPath = [[self tableView] indexPathForSelectedRow];
+    
     if (indexPath) {
         NSInteger selectedOption = [indexPath row]+1;
-        [_selectedOptions replaceObjectAtIndex:[_keyRow integerValue] withObject:[NSNumber numberWithInteger:selectedOption]];
+        [_selectedOptions setObject:[NSNumber numberWithInteger:selectedOption] forKey:_key];
+    }
+    
+    NSArray *keys = [_selectedOptions allKeys];
+    NSInteger countNull = 0;
+    
+    for (NSString *n in keys) {
+        if ([[_selectedOptions valueForKey:n] isEqualToNumber:@0]) {
+            countNull++;
+        }
+    }
+    
+    NSNumber *count = [NSNumber numberWithInteger:countNull];
+    
+    if ([count isEqualToNumber:[NSNumber numberWithInt:0]]) {
+        [segue.destinationViewController enableDoneButton:YES];
+    } else {
+        [segue.destinationViewController enableDoneButton:NO];
     }
 }
-
 
 @end

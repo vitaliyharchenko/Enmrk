@@ -7,9 +7,12 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "AppDelegate.h"
 
 @interface MainTableViewController : UITableViewController
 
 @property (strong,nonatomic) NSMutableArray *transformators;
+- (IBAction)unwindToList:(UIStoryboardSegue *)segue;
+- (IBAction)logoutAction:(id)sender;
 
 @end

@@ -20,6 +20,7 @@
 - (void)saveContext;
 - (NSURL *)applicationDocumentsDirectory;
 - (void)initWindowAfterLogin;
+- (void)initWindowWithLogin;
 
 
 @end
