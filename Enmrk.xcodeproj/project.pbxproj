@@ -33,6 +33,11 @@
 		C7E1987A1A8CB3E0001B5A03 /* UIWebView+AFNetworking.m in Sources */ = {isa = PBXBuildFile; fileRef = C7E198671A8CB3E0001B5A03 /* UIWebView+AFNetworking.m */; };
 		C7E1987E1A8D166D001B5A03 /* DescriptionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C7E1987D1A8D166D001B5A03 /* DescriptionViewController.m */; };
 		C7E198801A8D3727001B5A03 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C7E1987F1A8D3727001B5A03 /* Main.storyboard */; };
+		C7E198891A8DE53A001B5A03 /* NSString+MD5.m in Sources */ = {isa = PBXBuildFile; fileRef = C7E198881A8DE53A001B5A03 /* NSString+MD5.m */; };
+		C7E198AC1A8E24DE001B5A03 /* AESCrypt.m in Sources */ = {isa = PBXBuildFile; fileRef = C7E198A21A8E24DE001B5A03 /* AESCrypt.m */; };
+		C7E198AE1A8E24DE001B5A03 /* NSData+Base64.m in Sources */ = {isa = PBXBuildFile; fileRef = C7E198A51A8E24DE001B5A03 /* NSData+Base64.m */; };
+		C7E198AF1A8E24DE001B5A03 /* NSData+CommonCrypto.m in Sources */ = {isa = PBXBuildFile; fileRef = C7E198A71A8E24DE001B5A03 /* NSData+CommonCrypto.m */; };
+		C7E198B01A8E24DE001B5A03 /* NSString+Base64.m in Sources */ = {isa = PBXBuildFile; fileRef = C7E198A91A8E24DE001B5A03 /* NSString+Base64.m */; };
 		C7FB91001A85E65C0040CC76 /* MainTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C7FB90FF1A85E65C0040CC76 /* MainTableViewController.m */; };
 		C7FB91031A85E83F0040CC76 /* ENTransformator.m in Sources */ = {isa = PBXBuildFile; fileRef = C7FB91021A85E83F0040CC76 /* ENTransformator.m */; };
 		C7FB91061A85EE010040CC76 /* DetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C7FB91051A85EE010040CC76 /* DetailViewController.m */; };
@@ -103,6 +108,16 @@
 		C7E1987C1A8D166D001B5A03 /* DescriptionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DescriptionViewController.h; sourceTree = "<group>"; };
 		C7E1987D1A8D166D001B5A03 /* DescriptionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DescriptionViewController.m; sourceTree = "<group>"; };
 		C7E1987F1A8D3727001B5A03 /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
+		C7E198871A8DE53A001B5A03 /* NSString+MD5.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+MD5.h"; sourceTree = "<group>"; };
+		C7E198881A8DE53A001B5A03 /* NSString+MD5.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+MD5.m"; sourceTree = "<group>"; };
+		C7E198A11A8E24DE001B5A03 /* AESCrypt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AESCrypt.h; sourceTree = "<group>"; };
+		C7E198A21A8E24DE001B5A03 /* AESCrypt.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AESCrypt.m; sourceTree = "<group>"; };
+		C7E198A41A8E24DE001B5A03 /* NSData+Base64.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+Base64.h"; sourceTree = "<group>"; };
+		C7E198A51A8E24DE001B5A03 /* NSData+Base64.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+Base64.m"; sourceTree = "<group>"; };
+		C7E198A61A8E24DE001B5A03 /* NSData+CommonCrypto.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+CommonCrypto.h"; sourceTree = "<group>"; };
+		C7E198A71A8E24DE001B5A03 /* NSData+CommonCrypto.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+CommonCrypto.m"; sourceTree = "<group>"; };
+		C7E198A81A8E24DE001B5A03 /* NSString+Base64.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+Base64.h"; sourceTree = "<group>"; };
+		C7E198A91A8E24DE001B5A03 /* NSString+Base64.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+Base64.m"; sourceTree = "<group>"; };
 		C7FB90FE1A85E65C0040CC76 /* MainTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MainTableViewController.h; sourceTree = "<group>"; };
 		C7FB90FF1A85E65C0040CC76 /* MainTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MainTableViewController.m; sourceTree = "<group>"; };
 		C7FB91011A85E83F0040CC76 /* ENTransformator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ENTransformator.h; sourceTree = "<group>"; };
@@ -158,6 +173,8 @@
 				C77DAA421A85DCCA00DFD536 /* AppDelegate.m */,
 				C7FB91011A85E83F0040CC76 /* ENTransformator.h */,
 				C7FB91021A85E83F0040CC76 /* ENTransformator.m */,
+				C7E198871A8DE53A001B5A03 /* NSString+MD5.h */,
+				C7E198881A8DE53A001B5A03 /* NSString+MD5.m */,
 				C77DAA661A85DE0C00DFD536 /* LoginViewController.h */,
 				C77DAA671A85DE0C00DFD536 /* LoginViewController.m */,
 				C7FB90FE1A85E65C0040CC76 /* MainTableViewController.h */,
@@ -171,6 +188,7 @@
 				C7E1987F1A8D3727001B5A03 /* Main.storyboard */,
 				C7E1987C1A8D166D001B5A03 /* DescriptionViewController.h */,
 				C7E1987D1A8D166D001B5A03 /* DescriptionViewController.m */,
+				C7E1989F1A8E24DD001B5A03 /* AESCrypt-ObjC-master */,
 				C7E1987B1A8CB3EC001B5A03 /* Pods */,
 				C77DAA4D1A85DCCA00DFD536 /* Images.xcassets */,
 				C77DAA4F1A85DCCA00DFD536 /* LaunchScreen.xib */,
@@ -265,6 +283,21 @@
 				C7E198561A8CB3E0001B5A03 /* UIKit+AFNetworking */,
 			);
 			name = Pods;
+			sourceTree = "<group>";
+		};
+		C7E1989F1A8E24DD001B5A03 /* AESCrypt-ObjC-master */ = {
+			isa = PBXGroup;
+			children = (
+				C7E198A11A8E24DE001B5A03 /* AESCrypt.h */,
+				C7E198A21A8E24DE001B5A03 /* AESCrypt.m */,
+				C7E198A41A8E24DE001B5A03 /* NSData+Base64.h */,
+				C7E198A51A8E24DE001B5A03 /* NSData+Base64.m */,
+				C7E198A61A8E24DE001B5A03 /* NSData+CommonCrypto.h */,
+				C7E198A71A8E24DE001B5A03 /* NSData+CommonCrypto.m */,
+				C7E198A81A8E24DE001B5A03 /* NSString+Base64.h */,
+				C7E198A91A8E24DE001B5A03 /* NSString+Base64.m */,
+			);
+			path = "AESCrypt-ObjC-master";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -373,6 +406,7 @@
 				C77DAA461A85DCCA00DFD536 /* Enmrk.xcdatamodeld in Sources */,
 				C7E198781A8CB3E0001B5A03 /* UIProgressView+AFNetworking.m in Sources */,
 				C7E198751A8CB3E0001B5A03 /* UIAlertView+AFNetworking.m in Sources */,
+				C7E198891A8DE53A001B5A03 /* NSString+MD5.m in Sources */,
 				C7E198731A8CB3E0001B5A03 /* AFNetworkActivityIndicatorManager.m in Sources */,
 				C7E1986D1A8CB3E0001B5A03 /* AFURLConnectionOperation.m in Sources */,
 				C7E1987E1A8D166D001B5A03 /* DescriptionViewController.m in Sources */,
@@ -380,15 +414,19 @@
 				C7E198741A8CB3E0001B5A03 /* UIActivityIndicatorView+AFNetworking.m in Sources */,
 				C7E198681A8CB3E0001B5A03 /* AFHTTPRequestOperation.m in Sources */,
 				C7E1987A1A8CB3E0001B5A03 /* UIWebView+AFNetworking.m in Sources */,
+				C7E198AE1A8E24DE001B5A03 /* NSData+Base64.m in Sources */,
 				C7E1986A1A8CB3E0001B5A03 /* AFHTTPSessionManager.m in Sources */,
 				C7E1986E1A8CB3E0001B5A03 /* AFURLRequestSerialization.m in Sources */,
+				C7E198AF1A8E24DE001B5A03 /* NSData+CommonCrypto.m in Sources */,
 				C7FB91121A86BAB20040CC76 /* SelectTableViewController.m in Sources */,
 				C7E198701A8CB3E0001B5A03 /* AFURLSessionManager.m in Sources */,
 				C77DAA431A85DCCA00DFD536 /* AppDelegate.m in Sources */,
 				C7E198691A8CB3E0001B5A03 /* AFHTTPRequestOperationManager.m in Sources */,
 				C7FB91001A85E65C0040CC76 /* MainTableViewController.m in Sources */,
 				C7E1986F1A8CB3E0001B5A03 /* AFURLResponseSerialization.m in Sources */,
+				C7E198AC1A8E24DE001B5A03 /* AESCrypt.m in Sources */,
 				C7E198791A8CB3E0001B5A03 /* UIRefreshControl+AFNetworking.m in Sources */,
+				C7E198B01A8E24DE001B5A03 /* NSString+Base64.m in Sources */,
 				C7E198771A8CB3E0001B5A03 /* UIImageView+AFNetworking.m in Sources */,
 				C77DAA401A85DCCA00DFD536 /* main.m in Sources */,
 				C7FB91031A85E83F0040CC76 /* ENTransformator.m in Sources */,

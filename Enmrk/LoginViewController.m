@@ -8,6 +8,8 @@
 
 #import "LoginViewController.h"
 #import "AppDelegate.h"
+#import "NSString+MD5.h"
+#import "AESCrypt.h"
 
 @interface LoginViewController ()
 
@@ -36,25 +38,66 @@
 */
 
 - (IBAction)loginButton:(id)sender {
+    
     [self.activityIndicator setHidden:NO];
     [self.activityIndicator startAnimating];
     
-    //    NSString *email = self.emailField.text;
-    //    NSString *password = self.passwordField.text;
+    NSString *login = self.loginField.text;
+    NSString *password = self.passwordField.text;
     
     AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
-    //    manager.responseSerializer.acceptableContentTypes = [NSSet setWithObject:@"text/html"];
-    [manager POST:@"http://enmrk.ru/api/auth/" parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
+    
+    [manager POST:@"http://enmrk.ru/api/auth/" parameters:@{@"login": login} success:^(AFHTTPRequestOperation *operation, id responseObject) {
         
         NSString *status = [responseObject objectForKey:@"status"];
-        NSString *rdn = [responseObject objectForKey:@"rdn"];
+        NSString *rnd = [responseObject objectForKey:@"rnd"];
         
-        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Все окей" message:status delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-        [alertView show];
-        [self.activityIndicator setHidden:YES];
+        if ([status isEqualToString:@"OK"]) {
+            
+            NSString *md5pass = [password MD5];
+            NSLog(@"Password: %@", password);
+            NSLog(@"PasswordMD5: %@", md5pass);
+            
+            NSLog(@"RND in request: %@", rnd);
+            
+            NSString *rndDecoded = [AESCrypt decrypt:rnd password:password];
+            NSLog(@"rdnDecoded: %@", rndDecoded);
+            
+            NSString *rndEncoded = [AESCrypt encrypt:rnd password:password];
+            NSLog(@"rdnEncoded: %@", rndEncoded);
+            
+            
+            NSString *pass = [password MD5];
+            
+            NSString *msgEncoded = [AESCrypt encrypt:@"Mesage" password:pass];
+            NSLog(@"msgEncoded: %@", msgEncoded);
+            
+            NSString *msgDecoded = [AESCrypt decrypt:msgEncoded password:pass];
+            NSLog(@"msgDecoded: %@", msgDecoded);
+            
+            
+            
+            NSDictionary *parameters = @{@"login": login, @"pass": password};
+            AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+            [manager POST:@"http://enmrk.ru/api/auth/" parameters:parameters success:^(AFHTTPRequestOperation *operation, id responseObject) {
+                
+                NSLog(@"Success Auth: %@",responseObject);
+                
+            } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+                NSLog(@"API Auth Connection Error: %@", error);
+                
+                UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Error" message:[error localizedDescription] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+                [alertView show];
+            }];
+            
+        }
         
-        AppDelegate *app = [[UIApplication sharedApplication] delegate];
-        [app initWindowAfterLogin];
+//        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:status message:rnd delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+//        [alertView show];
+//        [self.activityIndicator setHidden:YES];
+//        
+//        AppDelegate *app = [[UIApplication sharedApplication] delegate];
+//        [app initWindowAfterLogin];
         
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         NSLog(@"API Auth Connection Error: %@", error);
