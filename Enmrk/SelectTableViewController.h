@@ -11,10 +11,8 @@
 
 @interface SelectTableViewController : UITableViewController
 
-@property (nonatomic, strong) NSMutableDictionary *selectedOptions;
-@property (nonatomic, strong) NSDictionary *options;
-@property (nonatomic, strong) NSString *key;
-
-@property (nonatomic, weak) AddViewController *addViewController;
+@property (nonatomic, strong) NSMutableDictionary *selectedProperty;
+@property (strong,nonatomic) NSMutableDictionary *transformator;
+@property (strong,nonatomic) NSNumber *isNew;
 
 @end

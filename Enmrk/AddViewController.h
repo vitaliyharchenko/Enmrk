@@ -8,13 +8,12 @@
 
 #import <UIKit/UIKit.h>
 
-@interface AddViewController : UITableViewController <UITableViewDataSource, UITableViewDelegate>
+@interface AddViewController : UITableViewController <UITableViewDataSource, UITableViewDelegate,UINavigationControllerDelegate>
 
-@property NSMutableDictionary *selectedOptions;
-@property (weak, nonatomic) IBOutlet UIBarButtonItem *addButton;
-@property (nonatomic, strong) NSString *about;
+@property (strong,nonatomic) NSMutableDictionary *transformator;
+@property (strong,nonatomic) NSArray *properties;
+@property (strong,nonatomic) NSNumber *isNew;
 
-- (void)enableDoneButton:(BOOL)enable;
 - (IBAction)unwindToList:(UIStoryboardSegue *)segue;
 - (IBAction)unwindFromAbout:(UIStoryboardSegue *)segue;
 

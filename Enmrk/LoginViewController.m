@@ -8,8 +8,9 @@
 
 #import "LoginViewController.h"
 #import "AppDelegate.h"
-#import "NSString+MD5.h"
-#import "AESCrypt.h"
+#import "ENAuth.h"
+#import "ENTransformator.h"
+#import "MainTableViewController.h"
 
 @interface LoginViewController ()
 
@@ -20,6 +21,26 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+    
+    [_loginField setDelegate:self];
+    [_passwordField setDelegate:self];
+    
+    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]
+                                   initWithTarget:self
+                                   action:@selector(dismissKeyboard)];
+    
+    [self.view addGestureRecognizer:tap];
+}
+
+-(void)dismissKeyboard {
+//    [_loginField resignFirstResponder];
+    [self.view endEditing:YES];
+}
+
+-(BOOL)textFieldShouldReturn:(UITextField *)textField{
+    
+    [textField resignFirstResponder];
+    return YES;
 }
 
 - (void)didReceiveMemoryWarning {
@@ -45,65 +66,92 @@
     NSString *login = self.loginField.text;
     NSString *password = self.passwordField.text;
     
+    [[ENAuth alloc] firstAuthWithLogin:login andPassword:password];
+    
     AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
     
     [manager POST:@"http://enmrk.ru/api/auth/" parameters:@{@"login": login} success:^(AFHTTPRequestOperation *operation, id responseObject) {
         
+        //NSLog(@"First req. Response = %@",responseObject);
+        
         NSString *status = [responseObject objectForKey:@"status"];
-        NSString *rnd = [responseObject objectForKey:@"rnd"];
         
         if ([status isEqualToString:@"OK"]) {
             
-            NSString *md5pass = [password MD5];
-            NSLog(@"Password: %@", password);
-            NSLog(@"PasswordMD5: %@", md5pass);
+            [[ENAuth alloc] reAuthWithResponseObject:responseObject];
             
-            NSLog(@"RND in request: %@", rnd);
+            NSDictionary *parameters = [ENAuth parametersForAPI];
             
-            NSString *rndDecoded = [AESCrypt decrypt:rnd password:password];
-            NSLog(@"rdnDecoded: %@", rndDecoded);
-            
-            NSString *rndEncoded = [AESCrypt encrypt:rnd password:password];
-            NSLog(@"rdnEncoded: %@", rndEncoded);
-            
-            
-            NSString *pass = [password MD5];
-            
-            NSString *msgEncoded = [AESCrypt encrypt:@"Mesage" password:pass];
-            NSLog(@"msgEncoded: %@", msgEncoded);
-            
-            NSString *msgDecoded = [AESCrypt decrypt:msgEncoded password:pass];
-            NSLog(@"msgDecoded: %@", msgDecoded);
-            
-            
-            
-            NSDictionary *parameters = @{@"login": login, @"pass": password};
             AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
             [manager POST:@"http://enmrk.ru/api/auth/" parameters:parameters success:^(AFHTTPRequestOperation *operation, id responseObject) {
                 
-                NSLog(@"Success Auth: %@",responseObject);
+                NSString *status = [responseObject objectForKey:@"status"];
+                
+                //NSLog(@"First Auth. Response = %@",responseObject);
+                
+                [[ENAuth alloc] reAuthWithResponseObject:responseObject];
+                if ([status isEqualToString:@"OK"]) {
+                    [self.activityIndicator setHidden:YES];
+                    
+                    AppDelegate *app = [[UIApplication sharedApplication] delegate];
+                    [app initWindowAfterLogin];
+                } else {
+                    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Auth Error" message:@"Wrong user,pass" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+                    [alertView show];
+                    [self.activityIndicator setHidden:YES];
+                }
                 
             } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
                 NSLog(@"API Auth Connection Error: %@", error);
                 
                 UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Error" message:[error localizedDescription] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
                 [alertView show];
+                
+                [self.activityIndicator setHidden:YES];
             }];
             
         }
-        
-//        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:status message:rnd delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-//        [alertView show];
-//        [self.activityIndicator setHidden:YES];
-//        
-//        AppDelegate *app = [[UIApplication sharedApplication] delegate];
-//        [app initWindowAfterLogin];
         
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         NSLog(@"API Auth Connection Error: %@", error);
         
         UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Error" message:[error localizedDescription] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
         [alertView show];
+        
+        [self.activityIndicator setHidden:YES];
     }];
+}
+
+- (IBAction)resetPass:(id)sender {
+    
+    NSString *login = self.loginField.text;
+    if (login) {
+        
+        AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+        
+        [manager POST:@"http://enmrk.ru/api/auth/" parameters:@{@"login": login, @"act": @"passreset"} success:^(AFHTTPRequestOperation *operation, id responseObject) {
+            
+            NSString *status = [responseObject objectForKey:@"status"];
+            
+            if ([status isEqualToString:@"OK"]) {
+                
+                UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Успешно." message:@"Ваш пароль сброшен, проверьте свой электронный ящик." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+                [alertView show];
+                
+            } else {
+                
+                UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Ошибка" message:@"Что-то пошло не так." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+                [alertView show];
+                
+            }
+            
+        } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+            NSLog(@"API Auth Connection Error: %@", error);
+            
+            UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Error" message:[error localizedDescription] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+            [alertView show];
+        }];
+    }
+    
 }
 @end

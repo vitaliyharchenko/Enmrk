@@ -9,12 +9,13 @@
 #import <UIKit/UIKit.h>
 #import "AFNetworking.h"
 
-@interface LoginViewController : UIViewController
+@interface LoginViewController : UIViewController <UITextFieldDelegate>
 
 @property (weak, nonatomic) IBOutlet UITextField *loginField;
 @property (weak, nonatomic) IBOutlet UITextField *passwordField;
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView *activityIndicator;
 
 - (IBAction)loginButton:(id)sender;
+- (IBAction)resetPass:(id)sender;
 
 @end

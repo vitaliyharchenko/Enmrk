@@ -7,6 +7,13 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		C719F1B01A9F1662002DFB38 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C719F1AF1A9F1662002DFB38 /* Main.storyboard */; };
+		C719F1B31A9F3472002DFB38 /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = C719F1B21A9F3472002DFB38 /* Reachability.m */; };
+		C719F1B61A9F8F07002DFB38 /* TapeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C719F1B51A9F8F07002DFB38 /* TapeViewController.m */; };
+		C7220FA51AA36AA3003456C4 /* RegistrationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C7220FA41AA36AA3003456C4 /* RegistrationViewController.m */; };
+		C7220FA81AA36FE1003456C4 /* ResetViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C7220FA71AA36FE1003456C4 /* ResetViewController.m */; };
+		C7220FAB1AA3790C003456C4 /* PlaygroundsTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C7220FAA1AA3790C003456C4 /* PlaygroundsTableViewController.m */; };
+		C7220FAE1AA379AB003456C4 /* StatusViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C7220FAD1AA379AB003456C4 /* StatusViewController.m */; };
 		C77DAA401A85DCCA00DFD536 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = C77DAA3F1A85DCCA00DFD536 /* main.m */; };
 		C77DAA431A85DCCA00DFD536 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = C77DAA421A85DCCA00DFD536 /* AppDelegate.m */; };
 		C77DAA461A85DCCA00DFD536 /* Enmrk.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = C77DAA441A85DCCA00DFD536 /* Enmrk.xcdatamodeld */; };
@@ -14,6 +21,11 @@
 		C77DAA511A85DCCA00DFD536 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = C77DAA4F1A85DCCA00DFD536 /* LaunchScreen.xib */; };
 		C77DAA5D1A85DCCA00DFD536 /* EnmrkTests.m in Sources */ = {isa = PBXBuildFile; fileRef = C77DAA5C1A85DCCA00DFD536 /* EnmrkTests.m */; };
 		C77DAA681A85DE0C00DFD536 /* LoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C77DAA671A85DE0C00DFD536 /* LoginViewController.m */; };
+		C7B41B051A95130200F39175 /* ENAuth.m in Sources */ = {isa = PBXBuildFile; fileRef = C7B41B041A95130200F39175 /* ENAuth.m */; };
+		C7BDAC691A9CCCD200E2FDC3 /* DetailTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C7BDAC681A9CCCD200E2FDC3 /* DetailTableViewController.m */; };
+		C7D697BC1AA05AF100670644 /* ImagesTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C7D697BB1AA05AF100670644 /* ImagesTableViewController.m */; };
+		C7D697BF1AA0613400670644 /* ImageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C7D697BE1AA0613400670644 /* ImageViewController.m */; };
+		C7D697C21AA07CEE00670644 /* SettingsTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C7D697C11AA07CEE00670644 /* SettingsTableViewController.m */; };
 		C7E198681A8CB3E0001B5A03 /* AFHTTPRequestOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = C7E198421A8CB3E0001B5A03 /* AFHTTPRequestOperation.m */; };
 		C7E198691A8CB3E0001B5A03 /* AFHTTPRequestOperationManager.m in Sources */ = {isa = PBXBuildFile; fileRef = C7E198441A8CB3E0001B5A03 /* AFHTTPRequestOperationManager.m */; };
 		C7E1986A1A8CB3E0001B5A03 /* AFHTTPSessionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = C7E198461A8CB3E0001B5A03 /* AFHTTPSessionManager.m */; };
@@ -31,16 +43,9 @@
 		C7E198781A8CB3E0001B5A03 /* UIProgressView+AFNetworking.m in Sources */ = {isa = PBXBuildFile; fileRef = C7E198631A8CB3E0001B5A03 /* UIProgressView+AFNetworking.m */; };
 		C7E198791A8CB3E0001B5A03 /* UIRefreshControl+AFNetworking.m in Sources */ = {isa = PBXBuildFile; fileRef = C7E198651A8CB3E0001B5A03 /* UIRefreshControl+AFNetworking.m */; };
 		C7E1987A1A8CB3E0001B5A03 /* UIWebView+AFNetworking.m in Sources */ = {isa = PBXBuildFile; fileRef = C7E198671A8CB3E0001B5A03 /* UIWebView+AFNetworking.m */; };
-		C7E1987E1A8D166D001B5A03 /* DescriptionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C7E1987D1A8D166D001B5A03 /* DescriptionViewController.m */; };
-		C7E198801A8D3727001B5A03 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C7E1987F1A8D3727001B5A03 /* Main.storyboard */; };
 		C7E198891A8DE53A001B5A03 /* NSString+MD5.m in Sources */ = {isa = PBXBuildFile; fileRef = C7E198881A8DE53A001B5A03 /* NSString+MD5.m */; };
-		C7E198AC1A8E24DE001B5A03 /* AESCrypt.m in Sources */ = {isa = PBXBuildFile; fileRef = C7E198A21A8E24DE001B5A03 /* AESCrypt.m */; };
-		C7E198AE1A8E24DE001B5A03 /* NSData+Base64.m in Sources */ = {isa = PBXBuildFile; fileRef = C7E198A51A8E24DE001B5A03 /* NSData+Base64.m */; };
-		C7E198AF1A8E24DE001B5A03 /* NSData+CommonCrypto.m in Sources */ = {isa = PBXBuildFile; fileRef = C7E198A71A8E24DE001B5A03 /* NSData+CommonCrypto.m */; };
-		C7E198B01A8E24DE001B5A03 /* NSString+Base64.m in Sources */ = {isa = PBXBuildFile; fileRef = C7E198A91A8E24DE001B5A03 /* NSString+Base64.m */; };
 		C7FB91001A85E65C0040CC76 /* MainTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C7FB90FF1A85E65C0040CC76 /* MainTableViewController.m */; };
 		C7FB91031A85E83F0040CC76 /* ENTransformator.m in Sources */ = {isa = PBXBuildFile; fileRef = C7FB91021A85E83F0040CC76 /* ENTransformator.m */; };
-		C7FB91061A85EE010040CC76 /* DetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C7FB91051A85EE010040CC76 /* DetailViewController.m */; };
 		C7FB91091A8697310040CC76 /* AddViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C7FB91081A8697310040CC76 /* AddViewController.m */; };
 		C7FB91121A86BAB20040CC76 /* SelectTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C7FB91111A86BAB10040CC76 /* SelectTableViewController.m */; };
 /* End PBXBuildFile section */
@@ -56,6 +61,19 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		C719F1AF1A9F1662002DFB38 /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
+		C719F1B11A9F3472002DFB38 /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Reachability.h; sourceTree = "<group>"; };
+		C719F1B21A9F3472002DFB38 /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Reachability.m; sourceTree = "<group>"; };
+		C719F1B41A9F8F07002DFB38 /* TapeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TapeViewController.h; sourceTree = "<group>"; };
+		C719F1B51A9F8F07002DFB38 /* TapeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TapeViewController.m; sourceTree = "<group>"; };
+		C7220FA31AA36AA3003456C4 /* RegistrationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RegistrationViewController.h; sourceTree = "<group>"; };
+		C7220FA41AA36AA3003456C4 /* RegistrationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RegistrationViewController.m; sourceTree = "<group>"; };
+		C7220FA61AA36FE1003456C4 /* ResetViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ResetViewController.h; sourceTree = "<group>"; };
+		C7220FA71AA36FE1003456C4 /* ResetViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ResetViewController.m; sourceTree = "<group>"; };
+		C7220FA91AA3790C003456C4 /* PlaygroundsTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlaygroundsTableViewController.h; sourceTree = "<group>"; };
+		C7220FAA1AA3790C003456C4 /* PlaygroundsTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PlaygroundsTableViewController.m; sourceTree = "<group>"; };
+		C7220FAC1AA379AB003456C4 /* StatusViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StatusViewController.h; sourceTree = "<group>"; };
+		C7220FAD1AA379AB003456C4 /* StatusViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StatusViewController.m; sourceTree = "<group>"; };
 		C77DAA3A1A85DCCA00DFD536 /* Enmrk.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Enmrk.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C77DAA3E1A85DCCA00DFD536 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		C77DAA3F1A85DCCA00DFD536 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -69,6 +87,16 @@
 		C77DAA5C1A85DCCA00DFD536 /* EnmrkTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = EnmrkTests.m; sourceTree = "<group>"; };
 		C77DAA661A85DE0C00DFD536 /* LoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoginViewController.h; sourceTree = "<group>"; };
 		C77DAA671A85DE0C00DFD536 /* LoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoginViewController.m; sourceTree = "<group>"; };
+		C7B41B031A95130200F39175 /* ENAuth.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ENAuth.h; sourceTree = "<group>"; };
+		C7B41B041A95130200F39175 /* ENAuth.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ENAuth.m; sourceTree = "<group>"; };
+		C7BDAC671A9CCCD200E2FDC3 /* DetailTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DetailTableViewController.h; sourceTree = "<group>"; };
+		C7BDAC681A9CCCD200E2FDC3 /* DetailTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DetailTableViewController.m; sourceTree = "<group>"; };
+		C7D697BA1AA05AF100670644 /* ImagesTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImagesTableViewController.h; sourceTree = "<group>"; };
+		C7D697BB1AA05AF100670644 /* ImagesTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ImagesTableViewController.m; sourceTree = "<group>"; };
+		C7D697BD1AA0613400670644 /* ImageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImageViewController.h; sourceTree = "<group>"; };
+		C7D697BE1AA0613400670644 /* ImageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ImageViewController.m; sourceTree = "<group>"; };
+		C7D697C01AA07CEE00670644 /* SettingsTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SettingsTableViewController.h; sourceTree = "<group>"; };
+		C7D697C11AA07CEE00670644 /* SettingsTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SettingsTableViewController.m; sourceTree = "<group>"; };
 		C7E198411A8CB3E0001B5A03 /* AFHTTPRequestOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFHTTPRequestOperation.h; sourceTree = "<group>"; };
 		C7E198421A8CB3E0001B5A03 /* AFHTTPRequestOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFHTTPRequestOperation.m; sourceTree = "<group>"; };
 		C7E198431A8CB3E0001B5A03 /* AFHTTPRequestOperationManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFHTTPRequestOperationManager.h; sourceTree = "<group>"; };
@@ -105,25 +133,11 @@
 		C7E198651A8CB3E0001B5A03 /* UIRefreshControl+AFNetworking.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIRefreshControl+AFNetworking.m"; sourceTree = "<group>"; };
 		C7E198661A8CB3E0001B5A03 /* UIWebView+AFNetworking.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIWebView+AFNetworking.h"; sourceTree = "<group>"; };
 		C7E198671A8CB3E0001B5A03 /* UIWebView+AFNetworking.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIWebView+AFNetworking.m"; sourceTree = "<group>"; };
-		C7E1987C1A8D166D001B5A03 /* DescriptionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DescriptionViewController.h; sourceTree = "<group>"; };
-		C7E1987D1A8D166D001B5A03 /* DescriptionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DescriptionViewController.m; sourceTree = "<group>"; };
-		C7E1987F1A8D3727001B5A03 /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
-		C7E198871A8DE53A001B5A03 /* NSString+MD5.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+MD5.h"; sourceTree = "<group>"; };
 		C7E198881A8DE53A001B5A03 /* NSString+MD5.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+MD5.m"; sourceTree = "<group>"; };
-		C7E198A11A8E24DE001B5A03 /* AESCrypt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AESCrypt.h; sourceTree = "<group>"; };
-		C7E198A21A8E24DE001B5A03 /* AESCrypt.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AESCrypt.m; sourceTree = "<group>"; };
-		C7E198A41A8E24DE001B5A03 /* NSData+Base64.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+Base64.h"; sourceTree = "<group>"; };
-		C7E198A51A8E24DE001B5A03 /* NSData+Base64.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+Base64.m"; sourceTree = "<group>"; };
-		C7E198A61A8E24DE001B5A03 /* NSData+CommonCrypto.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+CommonCrypto.h"; sourceTree = "<group>"; };
-		C7E198A71A8E24DE001B5A03 /* NSData+CommonCrypto.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+CommonCrypto.m"; sourceTree = "<group>"; };
-		C7E198A81A8E24DE001B5A03 /* NSString+Base64.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+Base64.h"; sourceTree = "<group>"; };
-		C7E198A91A8E24DE001B5A03 /* NSString+Base64.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+Base64.m"; sourceTree = "<group>"; };
 		C7FB90FE1A85E65C0040CC76 /* MainTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MainTableViewController.h; sourceTree = "<group>"; };
 		C7FB90FF1A85E65C0040CC76 /* MainTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MainTableViewController.m; sourceTree = "<group>"; };
 		C7FB91011A85E83F0040CC76 /* ENTransformator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ENTransformator.h; sourceTree = "<group>"; };
 		C7FB91021A85E83F0040CC76 /* ENTransformator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ENTransformator.m; sourceTree = "<group>"; };
-		C7FB91041A85EE010040CC76 /* DetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DetailViewController.h; sourceTree = "<group>"; };
-		C7FB91051A85EE010040CC76 /* DetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DetailViewController.m; sourceTree = "<group>"; };
 		C7FB91071A8697310040CC76 /* AddViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AddViewController.h; sourceTree = "<group>"; };
 		C7FB91081A8697310040CC76 /* AddViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AddViewController.m; sourceTree = "<group>"; };
 		C7FB91101A86BAB10040CC76 /* SelectTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SelectTableViewController.h; sourceTree = "<group>"; };
@@ -148,6 +162,21 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		C7220FAF1AA379B7003456C4 /* Login */ = {
+			isa = PBXGroup;
+			children = (
+				C7D697C01AA07CEE00670644 /* SettingsTableViewController.h */,
+				C7D697C11AA07CEE00670644 /* SettingsTableViewController.m */,
+				C7220FA31AA36AA3003456C4 /* RegistrationViewController.h */,
+				C7220FA41AA36AA3003456C4 /* RegistrationViewController.m */,
+				C7220FA61AA36FE1003456C4 /* ResetViewController.h */,
+				C7220FA71AA36FE1003456C4 /* ResetViewController.m */,
+				C77DAA661A85DE0C00DFD536 /* LoginViewController.h */,
+				C77DAA671A85DE0C00DFD536 /* LoginViewController.m */,
+			);
+			name = Login;
+			sourceTree = "<group>";
+		};
 		C77DAA311A85DCCA00DFD536 = {
 			isa = PBXGroup;
 			children = (
@@ -169,26 +198,32 @@
 		C77DAA3C1A85DCCA00DFD536 /* Enmrk */ = {
 			isa = PBXGroup;
 			children = (
+				C7220FAF1AA379B7003456C4 /* Login */,
 				C77DAA411A85DCCA00DFD536 /* AppDelegate.h */,
 				C77DAA421A85DCCA00DFD536 /* AppDelegate.m */,
 				C7FB91011A85E83F0040CC76 /* ENTransformator.h */,
 				C7FB91021A85E83F0040CC76 /* ENTransformator.m */,
-				C7E198871A8DE53A001B5A03 /* NSString+MD5.h */,
-				C7E198881A8DE53A001B5A03 /* NSString+MD5.m */,
-				C77DAA661A85DE0C00DFD536 /* LoginViewController.h */,
-				C77DAA671A85DE0C00DFD536 /* LoginViewController.m */,
+				C7B41B031A95130200F39175 /* ENAuth.h */,
+				C7B41B041A95130200F39175 /* ENAuth.m */,
 				C7FB90FE1A85E65C0040CC76 /* MainTableViewController.h */,
 				C7FB90FF1A85E65C0040CC76 /* MainTableViewController.m */,
-				C7FB91041A85EE010040CC76 /* DetailViewController.h */,
-				C7FB91051A85EE010040CC76 /* DetailViewController.m */,
+				C7BDAC671A9CCCD200E2FDC3 /* DetailTableViewController.h */,
+				C7BDAC681A9CCCD200E2FDC3 /* DetailTableViewController.m */,
 				C7FB91071A8697310040CC76 /* AddViewController.h */,
 				C7FB91081A8697310040CC76 /* AddViewController.m */,
 				C7FB91101A86BAB10040CC76 /* SelectTableViewController.h */,
 				C7FB91111A86BAB10040CC76 /* SelectTableViewController.m */,
-				C7E1987F1A8D3727001B5A03 /* Main.storyboard */,
-				C7E1987C1A8D166D001B5A03 /* DescriptionViewController.h */,
-				C7E1987D1A8D166D001B5A03 /* DescriptionViewController.m */,
-				C7E1989F1A8E24DD001B5A03 /* AESCrypt-ObjC-master */,
+				C719F1B41A9F8F07002DFB38 /* TapeViewController.h */,
+				C719F1B51A9F8F07002DFB38 /* TapeViewController.m */,
+				C7D697BA1AA05AF100670644 /* ImagesTableViewController.h */,
+				C7D697BB1AA05AF100670644 /* ImagesTableViewController.m */,
+				C7D697BD1AA0613400670644 /* ImageViewController.h */,
+				C7D697BE1AA0613400670644 /* ImageViewController.m */,
+				C7220FA91AA3790C003456C4 /* PlaygroundsTableViewController.h */,
+				C7220FAA1AA3790C003456C4 /* PlaygroundsTableViewController.m */,
+				C7220FAC1AA379AB003456C4 /* StatusViewController.h */,
+				C7220FAD1AA379AB003456C4 /* StatusViewController.m */,
+				C719F1AF1A9F1662002DFB38 /* Main.storyboard */,
 				C7E1987B1A8CB3EC001B5A03 /* Pods */,
 				C77DAA4D1A85DCCA00DFD536 /* Images.xcassets */,
 				C77DAA4F1A85DCCA00DFD536 /* LaunchScreen.xib */,
@@ -279,25 +314,13 @@
 		C7E1987B1A8CB3EC001B5A03 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
+				C7E198881A8DE53A001B5A03 /* NSString+MD5.m */,
+				C719F1B11A9F3472002DFB38 /* Reachability.h */,
+				C719F1B21A9F3472002DFB38 /* Reachability.m */,
 				C7E198401A8CB3E0001B5A03 /* AFNetworking */,
 				C7E198561A8CB3E0001B5A03 /* UIKit+AFNetworking */,
 			);
 			name = Pods;
-			sourceTree = "<group>";
-		};
-		C7E1989F1A8E24DD001B5A03 /* AESCrypt-ObjC-master */ = {
-			isa = PBXGroup;
-			children = (
-				C7E198A11A8E24DE001B5A03 /* AESCrypt.h */,
-				C7E198A21A8E24DE001B5A03 /* AESCrypt.m */,
-				C7E198A41A8E24DE001B5A03 /* NSData+Base64.h */,
-				C7E198A51A8E24DE001B5A03 /* NSData+Base64.m */,
-				C7E198A61A8E24DE001B5A03 /* NSData+CommonCrypto.h */,
-				C7E198A71A8E24DE001B5A03 /* NSData+CommonCrypto.m */,
-				C7E198A81A8E24DE001B5A03 /* NSString+Base64.h */,
-				C7E198A91A8E24DE001B5A03 /* NSString+Base64.m */,
-			);
-			path = "AESCrypt-ObjC-master";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -349,6 +372,7 @@
 				TargetAttributes = {
 					C77DAA391A85DCCA00DFD536 = {
 						CreatedOnToolsVersion = 6.1.1;
+						DevelopmentTeam = Y3W7N9BNH9;
 					};
 					C77DAA551A85DCCA00DFD536 = {
 						CreatedOnToolsVersion = 6.1.1;
@@ -380,7 +404,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C7E198801A8D3727001B5A03 /* Main.storyboard in Resources */,
+				C719F1B01A9F1662002DFB38 /* Main.storyboard in Resources */,
 				C77DAA511A85DCCA00DFD536 /* LaunchScreen.xib in Resources */,
 				C77DAA4E1A85DCCA00DFD536 /* Images.xcassets in Resources */,
 			);
@@ -403,35 +427,40 @@
 				C7E1986C1A8CB3E0001B5A03 /* AFSecurityPolicy.m in Sources */,
 				C77DAA681A85DE0C00DFD536 /* LoginViewController.m in Sources */,
 				C7E1986B1A8CB3E0001B5A03 /* AFNetworkReachabilityManager.m in Sources */,
+				C7220FA81AA36FE1003456C4 /* ResetViewController.m in Sources */,
 				C77DAA461A85DCCA00DFD536 /* Enmrk.xcdatamodeld in Sources */,
 				C7E198781A8CB3E0001B5A03 /* UIProgressView+AFNetworking.m in Sources */,
+				C7BDAC691A9CCCD200E2FDC3 /* DetailTableViewController.m in Sources */,
 				C7E198751A8CB3E0001B5A03 /* UIAlertView+AFNetworking.m in Sources */,
 				C7E198891A8DE53A001B5A03 /* NSString+MD5.m in Sources */,
 				C7E198731A8CB3E0001B5A03 /* AFNetworkActivityIndicatorManager.m in Sources */,
+				C7D697C21AA07CEE00670644 /* SettingsTableViewController.m in Sources */,
 				C7E1986D1A8CB3E0001B5A03 /* AFURLConnectionOperation.m in Sources */,
-				C7E1987E1A8D166D001B5A03 /* DescriptionViewController.m in Sources */,
+				C7220FAB1AA3790C003456C4 /* PlaygroundsTableViewController.m in Sources */,
 				C7E198761A8CB3E0001B5A03 /* UIButton+AFNetworking.m in Sources */,
+				C7B41B051A95130200F39175 /* ENAuth.m in Sources */,
 				C7E198741A8CB3E0001B5A03 /* UIActivityIndicatorView+AFNetworking.m in Sources */,
 				C7E198681A8CB3E0001B5A03 /* AFHTTPRequestOperation.m in Sources */,
 				C7E1987A1A8CB3E0001B5A03 /* UIWebView+AFNetworking.m in Sources */,
-				C7E198AE1A8E24DE001B5A03 /* NSData+Base64.m in Sources */,
 				C7E1986A1A8CB3E0001B5A03 /* AFHTTPSessionManager.m in Sources */,
 				C7E1986E1A8CB3E0001B5A03 /* AFURLRequestSerialization.m in Sources */,
-				C7E198AF1A8E24DE001B5A03 /* NSData+CommonCrypto.m in Sources */,
 				C7FB91121A86BAB20040CC76 /* SelectTableViewController.m in Sources */,
+				C7D697BF1AA0613400670644 /* ImageViewController.m in Sources */,
+				C7D697BC1AA05AF100670644 /* ImagesTableViewController.m in Sources */,
 				C7E198701A8CB3E0001B5A03 /* AFURLSessionManager.m in Sources */,
+				C7220FAE1AA379AB003456C4 /* StatusViewController.m in Sources */,
 				C77DAA431A85DCCA00DFD536 /* AppDelegate.m in Sources */,
+				C719F1B61A9F8F07002DFB38 /* TapeViewController.m in Sources */,
 				C7E198691A8CB3E0001B5A03 /* AFHTTPRequestOperationManager.m in Sources */,
 				C7FB91001A85E65C0040CC76 /* MainTableViewController.m in Sources */,
 				C7E1986F1A8CB3E0001B5A03 /* AFURLResponseSerialization.m in Sources */,
-				C7E198AC1A8E24DE001B5A03 /* AESCrypt.m in Sources */,
 				C7E198791A8CB3E0001B5A03 /* UIRefreshControl+AFNetworking.m in Sources */,
-				C7E198B01A8E24DE001B5A03 /* NSString+Base64.m in Sources */,
+				C719F1B31A9F3472002DFB38 /* Reachability.m in Sources */,
+				C7220FA51AA36AA3003456C4 /* RegistrationViewController.m in Sources */,
 				C7E198771A8CB3E0001B5A03 /* UIImageView+AFNetworking.m in Sources */,
 				C77DAA401A85DCCA00DFD536 /* main.m in Sources */,
 				C7FB91031A85E83F0040CC76 /* ENTransformator.m in Sources */,
 				C7FB91091A8697310040CC76 /* AddViewController.m in Sources */,
-				C7FB91061A85EE010040CC76 /* DetailViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

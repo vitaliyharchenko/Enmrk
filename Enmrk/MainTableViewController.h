@@ -9,10 +9,20 @@
 #import <UIKit/UIKit.h>
 #import "AppDelegate.h"
 
-@interface MainTableViewController : UITableViewController
+@interface MainTableViewController : UITableViewController <UITableViewDelegate,UITableViewDataSource>
 
 @property (strong,nonatomic) NSMutableArray *transformators;
+@property (strong,nonatomic) NSArray *imsTypes;
+@property (strong,nonatomic) NSDictionary *descriptionField;
+@property (strong,nonatomic) NSArray *properties;
+@property (strong,nonatomic) NSMutableArray *playgrounds;
+@property (strong,nonatomic) NSMutableArray *playgroundsStatuses;
+
+
 - (IBAction)unwindToList:(UIStoryboardSegue *)segue;
-- (IBAction)logoutAction:(id)sender;
+- (IBAction)syncAction:(id)sender;
+
+- (void)updateTransformator:(NSMutableDictionary *)transformator atRow:(NSInteger)transformatorRow;
+- (void)addTransformator:(NSMutableDictionary *)transformator;
 
 @end

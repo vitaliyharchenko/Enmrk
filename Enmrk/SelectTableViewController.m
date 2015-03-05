@@ -9,19 +9,26 @@
 #import "SelectTableViewController.h"
 #import "AddViewController.h"
 #import "AppDelegate.h"
+#import "ENTransformator.h"
+#import "ENAuth.h"
+#import "AFNetworking.h"
+#import "Reachability.h"
 
 @interface SelectTableViewController ()
 
-@property (nonatomic, strong) NSMutableArray *optionValues;
+@property (nonatomic, strong) NSObject *selectedValue;
 
 @end
 
 @implementation SelectTableViewController
 
 - (void)viewDidLoad {
-    [super viewDidLoad];    
-    self.optionValues = [_options objectForKey:_key];
-    self.navigationItem.title = _key;
+    [super viewDidLoad];
+    
+    _selectedValue = [ENTransformator parseSelectedValueForProperty:_selectedProperty forTransformator:_transformator];
+    
+    NSString *propertyName = [_selectedProperty objectForKey:@"name"];
+    self.navigationItem.title = propertyName;
     [self.tableView reloadData];
 }
 
@@ -37,23 +44,22 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return [_optionValues count]-1;
+    return [[_selectedProperty objectForKey:@"values"] count];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Option Cell" forIndexPath:indexPath];
     
-    NSObject *object = [_optionValues objectAtIndex:[indexPath row]+1];
-    NSString *string = [NSString stringWithFormat:@"%@",object];
+    NSMutableArray *values = [_selectedProperty objectForKey:@"values"];
     
-    NSInteger selectedPath = [indexPath row]+1;
-    NSInteger selectedOption = [[_selectedOptions objectForKey:_key] integerValue];
+    NSDictionary *value = [values objectAtIndex:[indexPath row]];
+    NSObject *valueVal = [value objectForKey:@"val"];
+
+    cell.textLabel.text = [NSString stringWithFormat:@"%@",valueVal];
     
-    if (selectedPath == selectedOption) {
-        [cell setAccessoryType:UITableViewCellAccessoryCheckmark];
+    if (valueVal == _selectedValue) {
+        cell.backgroundColor = [UIColor colorWithRed:0.95 green:0.95 blue:0.95 alpha:0.95];
     }
-    
-    cell.textLabel.text = string;
     
     return cell;
 }
@@ -63,26 +69,68 @@
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     NSIndexPath *indexPath = [[self tableView] indexPathForSelectedRow];
     
-    if (indexPath) {
-        NSInteger selectedOption = [indexPath row]+1;
-        [_selectedOptions setObject:[NSNumber numberWithInteger:selectedOption] forKey:_key];
-    }
+    NSMutableArray *values = [_selectedProperty objectForKey:@"values"];
+    NSInteger selectedPropertyId = [[_selectedProperty objectForKey:@"id"] integerValue];
+    NSDictionary *value = [values objectAtIndex:[indexPath row]];
+    NSInteger valueId = [[value objectForKey:@"id"] integerValue];
     
-    NSArray *keys = [_selectedOptions allKeys];
-    NSInteger countNull = 0;
+    NSMutableDictionary *newTransformator = [ENTransformator editTransformator:_transformator setValue:valueId forProperty:_selectedProperty];
+    _transformator = newTransformator;
     
-    for (NSString *n in keys) {
-        if ([[_selectedOptions valueForKey:n] isEqualToNumber:@0]) {
-            countNull++;
+    
+    Reachability *networkReachability = [Reachability reachabilityForInternetConnection];
+    NetworkStatus networkStatus = [networkReachability currentReachabilityStatus];
+    
+    if (networkStatus != NotReachable)
+    {
+        NSMutableDictionary *parameters = [NSMutableDictionary dictionaryWithDictionary:[ENAuth parametersForAPI]];
+        [parameters setObject:@"editTransformer" forKey:@"act"];
+        
+        NSString *text = [NSString stringWithFormat:@"properties[%ld]",(long)selectedPropertyId];
+        NSString *transf = [NSString stringWithFormat:@"%@",[_transformator objectForKey:@"id"]];
+        [parameters setObject:[NSString stringWithFormat:@"%ld",(long)valueId] forKey:text];
+        
+        NSNumber *transformatorId = [_transformator objectForKey:@"id"];
+        if (!(transformatorId == 0)) {
+            [parameters setObject:transf forKey:@"transf"];
         }
-    }
-    
-    NSNumber *count = [NSNumber numberWithInteger:countNull];
-    
-    if ([count isEqualToNumber:[NSNumber numberWithInt:0]]) {
-        [segue.destinationViewController enableDoneButton:YES];
+        
+        NSLog(@"Edit Transformers params: %@",parameters);
+        
+        AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+        [manager POST:@"http://enmrk.ru/api/transformers/add/" parameters:parameters success:^(AFHTTPRequestOperation *operation, id responseObject) {
+            
+            // NSLog(@"Edit Transformers: %@",responseObject);
+            
+            NSString *status = [responseObject objectForKey:@"status"];
+            
+            if ([status isEqualToString:@"OK"]) {
+                
+                if (!transformatorId) {
+                    NSNumber *insertedId = [responseObject objectForKey:@"inserted_id"];
+                    [_transformator setValue:insertedId forKey:@"id"];
+                }
+                
+                [segue.destinationViewController setTransformator:_transformator];
+                [segue.destinationViewController setIsNew:_isNew];
+                
+                [[ENAuth alloc] reAuthWithResponseObject:responseObject];
+                
+            } else {
+                
+                [[ENAuth alloc] reAuthWithResponseObject:responseObject];
+                NSString *error = [responseObject objectForKey:@"error"];
+                UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Error" message:error delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+                [alertView show];
+            }
+            
+        } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+            UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Error" message:[error localizedDescription] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+            [alertView show];
+        }];
     } else {
-        [segue.destinationViewController enableDoneButton:NO];
+        [segue.destinationViewController setTransformator:_transformator];
+        [segue.destinationViewController setIsNew:_isNew];
     }
 }
 

@@ -9,48 +9,25 @@
 #import "AddViewController.h"
 #import "ENTransformator.h"
 #import "SelectTableViewController.h"
-#import "DescriptionViewController.h"
+#import "AFNetworkReachabilityManager.h"
+#import "DetailTableViewController.h"
+#import "Reachability.h"
 
 @interface AddViewController ()
 
-@property NSDictionary *options;
-@property NSArray *optionsTitles;
+@property (strong,nonatomic) NSMutableDictionary *selectedProperty;
 
 @end
 
 @implementation AddViewController
 
-- (void)loadInitialData {
-    self.options = [ENTransformator initMenuDictionary];
-    self.optionsTitles = [ENTransformator initMenuArray];
-    
-    self.about = @"Описание херписание";
-    
-    [self.navigationItem.rightBarButtonItem setEnabled:NO];
-    
-    NSMutableDictionary *array = [[NSMutableDictionary alloc] init];
-    NSNumber *nill = @0;
-    
-    for (NSString *n in _optionsTitles) {
-        [array setObject:nill forKey:n];
-    }
-    _selectedOptions = array;
-}
-
-- (void)enableDoneButton:(BOOL)enable {
-    if (enable == YES) {
-        [_addButton setEnabled:YES];
-    } else {
-        [_addButton setEnabled:NO];
-    }
-}
-
 - (IBAction)unwindToList:(UIStoryboardSegue *)segue {
-    SelectTableViewController *source = [segue sourceViewController];
-    self.selectedOptions = source.selectedOptions;
-    
     [self.tableView reloadData];
+}
 
+- (void)setTransformator:(NSMutableDictionary *)transformator {
+    _transformator = transformator;
+    [self.tableView reloadData];
 }
 
 - (IBAction)unwindFromAbout:(UIStoryboardSegue *)segue {
@@ -59,9 +36,7 @@
 
 - (void)viewDidLoad {
     
-    self.navigationItem.title = @"Добавить трансформатор";
-    
-    [self loadInitialData];
+    self.navigationItem.title = @"Марка трансформатора";
     
     [self.tableView reloadData];
     
@@ -82,69 +57,85 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     // Return the number of rows in the section.
-    return [self.optionsTitles count]+1;
+    return [self.properties count];
 }
 
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     
-    NSInteger count = [self.optionsTitles count];
-    if ([indexPath row] == count) {
-        UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Description Cell" forIndexPath:indexPath];
-        cell.detailTextLabel.text = _about;
-        return cell;
+    NSMutableDictionary *prop = [self.properties objectAtIndex:[indexPath row]];
+    NSInteger propId = [[prop objectForKey:@"id"] integerValue];
+    
+    BOOL isp = NO;
+    if ([prop objectForKey:@"values"]) {
+        isp = YES;
     }
-    //
-    //    if ([indexPath row] == count+1) {
-    //        UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Photo Cell" forIndexPath:indexPath];
-    //        return cell;
-    //    }
-    //    
-    //    if ([indexPath row] == count+2) {
-    //        UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Button Cell" forIndexPath:indexPath];
-    //        return cell;
-    //    }
     
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Cell" forIndexPath:indexPath];
-
-    NSString *key = [_optionsTitles objectAtIndex:[indexPath row]];
-    NSArray *options = [_options objectForKey:key];
+    NSNumber *isProp = [NSNumber numberWithBool:isp];
     
-    cell.textLabel.text = key;
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Value Cell" forIndexPath:indexPath];
     
-    NSNumber *selected = [_selectedOptions objectForKey:key];
-    NSObject *option = [options objectAtIndex:[selected integerValue]];
-    if ([key  isEqual: @"Мощность"] && ![[_selectedOptions valueForKey:@"Мощность"] isEqual: @0]) {
-        NSString *text = [NSString stringWithFormat:@"%@ кВт",option];
-        cell.detailTextLabel.text = text;
+    cell.textLabel.text = [prop objectForKey:@"name"];
+    
+    NSString *fieldValue = [ENTransformator searchValueOfPropertyWithId:propId isProp:isProp forTransformator:_transformator forPropertiesArray:_properties];
+    if (fieldValue) {
+        cell.detailTextLabel.text = fieldValue;
     } else {
-        NSString *text = [NSString stringWithFormat:@"%@",option];
-        cell.detailTextLabel.text = text;
+        cell.detailTextLabel.text = @"Не выбрано";
     }
     
-    if (![[_selectedOptions valueForKey:key] isEqual: @0]) {
-        cell.backgroundColor = [UIColor colorWithRed:81/255.0f green:218/255.0f blue:132/255.0f alpha:0.5f];
-    }
-
     return cell;
+}
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+    NSMutableDictionary *property = [self.properties objectAtIndex:[indexPath row]];
+    BOOL isProp = NO;
+    if ([property objectForKey:@"values"]) {
+        isProp = YES;
+    }
+    self.selectedProperty = property;
+    
+    Reachability *networkReachability = [Reachability reachabilityForInternetConnection];
+    NetworkStatus networkStatus = [networkReachability currentReachabilityStatus];
+    
+    if ([_isNew integerValue] == 0) {
+        if (networkStatus == NotReachable)
+        {
+            NSLog(@"There is NO Internet connection");
+            UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Ошибка" message:@"Редактирование полей закрыто. Отсутствует подключение к интернету" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+            [alertView show];
+            [tableView deselectRowAtIndexPath:indexPath animated:YES];
+        }
+        else
+        {
+            NSLog(@"There is Internet connection");
+            if (isProp) {
+                [self performSegueWithIdentifier:@"selectSegue" sender:self];
+            } else {
+                [self performSegueWithIdentifier:@"writeSegue" sender:self];
+            }
+        }
+    } else {
+        if (isProp) {
+            [self performSegueWithIdentifier:@"selectSegue" sender:self];
+        } else {
+            [self performSegueWithIdentifier:@"writeSegue" sender:self];
+        }
+    }
 }
 
 #pragma mark - Navigation
 
 // In a storyboard-based application, you will often want to do a little preparation before navigation
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    if ([[segue identifier] isEqualToString:@"optionSegue"]) {
-        NSIndexPath *indexPath = [self.tableView indexPathForSelectedRow];
-        if (indexPath) {
-            NSString *key = [_optionsTitles objectAtIndex:[indexPath row]];
-            [segue.destinationViewController setSelectedOptions:_selectedOptions];
-            [segue.destinationViewController setKey:key];
-            [segue.destinationViewController setOptions:_options];
-        }
-    }
-    
-    if ([[segue identifier] isEqualToString:@"descriptionSegue"]) {
-        [segue.destinationViewController setAbout:_about];
+    if ([[segue identifier] isEqualToString:@"selectSegue"]) {
+        [segue.destinationViewController setSelectedProperty:_selectedProperty];
+        [segue.destinationViewController setTransformator:_transformator];
+        [segue.destinationViewController setIsNew:_isNew];
+    } else if ([[segue identifier] isEqualToString:@"writeSegue"]) {
+        [segue.destinationViewController setSelectedProperty:_selectedProperty];
+        [segue.destinationViewController setTransformator:_transformator];
+        [segue.destinationViewController setIsNew:_isNew];
     }
 }
 

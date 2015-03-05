@@ -8,43 +8,210 @@
 
 #import "MainTableViewController.h"
 #import "ENTransformator.h"
-#import "DetailViewController.h"
+#import "DetailTableViewController.h"
 #import "AddViewController.h"
+#import "ENAuth.h"
+#import "AFNetworking.h"
+#import "Reachability.h"
 
 @interface MainTableViewController ()
-
-@property NSDictionary *options;
 
 @end
 
 
 @implementation MainTableViewController
 
+- (void)loadInitialData {
+    NSDictionary *parameters = [ENAuth parametersForAPI];
+    
+    AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+    [manager POST:@"http://enmrk.ru/api/transformers/get/" parameters:parameters success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        
+        NSString *status = [responseObject objectForKey:@"status"];
+        
+        if ([status isEqualToString:@"OK"]) {
+            
+            self.transformators = [responseObject objectForKey:@"transformers"];
+            NSArray *properties = [responseObject objectForKey:@"properties"];
+            NSArray *fields = [responseObject objectForKey:@"fields"];
+            NSArray *ims = [responseObject objectForKey:@"ims"];
+            self.properties = [ENTransformator initOptionsWithProperties:properties andFields:fields];
+            self.imsTypes = ims;
+            self.descriptionField = [ENTransformator initDescriptionWithFields:fields];
+            self.playgrounds = [responseObject objectForKey:@"playgrounds"];
+            self.playgroundsStatuses = [responseObject objectForKey:@"playground_statuses"];
+            
+            [[ENAuth alloc] reAuthWithResponseObject:responseObject];
+            
+            [self.tableView reloadData];
+            
+        } else {
+            
+            [[ENAuth alloc] reAuthWithResponseObject:responseObject];
+            
+            NSString *error = [responseObject objectForKey:@"error"];
+            UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Error" message:error delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+            [alertView show];
+        }
+        
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Error" message:[error localizedDescription] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+        [alertView show];
+    }];
+}
+
+- (void)updateTransformator:(NSMutableDictionary *)transformator atRow:(NSInteger)transformatorRow {
+    NSMutableArray *mutable = [[NSMutableArray alloc] initWithArray:_transformators];
+    [mutable replaceObjectAtIndex:transformatorRow withObject:transformator];
+    _transformators = mutable;
+    
+    [self.tableView reloadData];
+}
+
+- (void)addTransformator:(NSMutableDictionary *)transformator {
+    NSMutableArray *mutable = [[NSMutableArray alloc] initWithArray:_transformators];
+    [mutable insertObject:transformator atIndex:0];
+    _transformators = mutable;
+    
+    [self.tableView reloadData];
+}
+
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     
     self.navigationItem.title = @"Трансформаторы";
     
-    self.transformators = [ENTransformator initTestArray];
-    self.options = [ENTransformator initMenuDictionary];
+    [self.tableView setDelegate: self];
+    
+    [self.tableView setDataSource:self];
+    
+    [self loadInitialData];
+    
+}
+
+- (void) viewWillAppear:(BOOL)animated {
     [self.tableView reloadData];
+}
+
+- (void)syncFirst{
+
+    NSDictionary *transformator = [_transformators objectAtIndex:0];
+    NSString *name = [transformator objectForKey:@"name"];
     
-    // Uncomment the following line to preserve selection between presentations.
-    // self.clearsSelectionOnViewWillAppear = NO;
+    [[UIApplication sharedApplication] beginIgnoringInteractionEvents];
     
-    // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-    // self.navigationItem.rightBarButtonItem = self.editButtonItem;
+    if (!name) {
+        
+        NSMutableDictionary *parameters = [NSMutableDictionary dictionaryWithDictionary:[ENAuth parametersForAPI]];
+        [parameters setObject:@"editTransformer" forKey:@"act"];
+        
+        NSArray *fields = [transformator objectForKey:@"fields"];
+        
+        int i;
+        if (fields.count > 0) {
+            for (i=0; i<fields.count; i++) {
+                NSDictionary *field = [fields objectAtIndex:i];
+                NSString *fieldId = [NSString stringWithFormat:@"fields[%@]",[field objectForKey:@"id"]];
+                NSString *fieldVal = [NSString stringWithFormat:@"%@",[field objectForKey:@"val"]];
+                [parameters setObject:fieldVal forKey:fieldId];
+            }
+        }
+        
+        NSArray *properties = [transformator objectForKey:@"properties"];
+        
+        if (properties.count > 0) {
+            for (i=0; i<properties.count; i++) {
+                NSDictionary *property = [properties objectAtIndex:i];
+                NSString *propId = [NSString stringWithFormat:@"properties[%@]",[property objectForKey:@"id"]];
+                NSString *propVal = [NSString stringWithFormat:@"%@",[property objectForKey:@"val"]];
+                [parameters setObject:propVal forKey:propId];
+            }
+        }
+        
+        #warning sync playgrounds
+        
+        AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+        
+        [manager POST:@"http://enmrk.ru/api/transformers/add/" parameters:parameters success:^(AFHTTPRequestOperation *operation, id responseObject) {
+            
+            NSLog(@"Sync Transformers: %@",responseObject);
+            
+            NSString *status = [responseObject objectForKey:@"status"];
+            
+            if ([status isEqualToString:@"OK"]) {
+                
+                [[ENAuth alloc] reAuthWithResponseObject:responseObject];
+                NSMutableArray *transformatorsMutable = [NSMutableArray arrayWithArray:_transformators];
+                [transformatorsMutable removeObjectAtIndex:0];
+                _transformators = transformatorsMutable;
+                
+                [self.tableView reloadData];
+                
+            } else {
+                
+                [[ENAuth alloc] reAuthWithResponseObject:responseObject];
+                
+                NSString *error = [responseObject objectForKey:@"error"];
+                UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Error" message:error delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+                [alertView show];
+            }
+            
+        } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+            UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Error" message:[error localizedDescription] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+            [alertView show];
+        }];
+    } else {
+        [self loadInitialData];
+    }
+    
+    [[UIApplication sharedApplication] endIgnoringInteractionEvents];
+    
+}
+
+- (IBAction)syncAction:(id)sender {
+    
+    Reachability *networkReachability = [Reachability reachabilityForInternetConnection];
+    NetworkStatus networkStatus = [networkReachability currentReachabilityStatus];
+    
+    if (networkStatus != NotReachable)
+    {
+        [self syncFirst];
+        
+    } else {
+        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Ошибка" message:@"Сеть недоступна. Попробуйте словить сеть и повторить синхронизацию." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+        [alertView show];
+    }
+    
 }
 
 - (IBAction)unwindToList:(UIStoryboardSegue *)segue {
-    AddViewController *source = [segue sourceViewController];
-    [self.transformators insertObject:[ENTransformator initTransformatorWithOptions:source.selectedOptions] atIndex:0];
-    [self.tableView reloadData];
-}
-
-- (IBAction)logoutAction:(id)sender {
-    AppDelegate *app = [[UIApplication sharedApplication] delegate];
-    [app initWindowWithLogin];
+    UIViewController *vc = [segue sourceViewController];
+    if ([vc isKindOfClass:[ DetailTableViewController class]]) {
+        DetailTableViewController *addViewController = (DetailTableViewController *)vc;
+        
+        Reachability *networkReachability = [Reachability reachabilityForInternetConnection];
+        NetworkStatus networkStatus = [networkReachability currentReachabilityStatus];
+        
+        if (networkStatus != NotReachable)
+        {
+            [self loadInitialData];
+        } else {
+            if ([addViewController.isNew integerValue] == 0)
+            {
+                [self updateTransformator:addViewController.transformator atRow:addViewController.transformatorRow];
+            } else {
+                NSMutableDictionary *transf = addViewController.transformator;
+                
+                if ([transf objectForKey:@"AlreadyInTable"]) {
+                    [self updateTransformator:transf atRow:addViewController.transformatorRow];
+                } else {
+                    [transf setValue:@"YES" forKey:@"AlreadyInTable"];
+                    [self addTransformator:transf];
+                }
+            }
+        }
+    }
 }
 
 - (void)didReceiveMemoryWarning {
@@ -76,62 +243,71 @@
         UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Transformator Cell" forIndexPath:indexPath];
         
         if (_transformators) {
-            ENTransformator *transformator = [_transformators objectAtIndex:indexPath.row-1];
-            NSString *text = [NSString stringWithFormat:@"%ld %@ %@ %@ %@ %@ %@ %@",
-                (long)[transformator.id integerValue],
-                [[_options objectForKey:@"Марка"] objectAtIndex:[transformator.mark integerValue]],
-                [[_options objectForKey:@"Соединение"] objectAtIndex:[transformator.conection integerValue]],
-                [[_options objectForKey:@"Производитель"] objectAtIndex:[transformator.producer integerValue]],
-                [[_options objectForKey:@"Мощность"] objectAtIndex:[transformator.power integerValue]],
-                [[_options objectForKey:@"Верхнее напряжение"] objectAtIndex:[transformator.upVoltage integerValue]],
-                [[_options objectForKey:@"Нижнее напряжение"] objectAtIndex:[transformator.downVoltage integerValue]],
-                [[_options objectForKey:@"Год выпуска"] objectAtIndex:[transformator.year integerValue]]
-            ];
+            NSString *transformatorName = [[_transformators objectAtIndex:indexPath.row-1] objectForKey:@"name"];
             
-            if ([transformator.sync isEqualToNumber:[NSNumber numberWithBool:NO]]) {
-                cell.backgroundColor = [UIColor colorWithRed:81/255.0f green:218/255.0f blue:132/255.0f alpha:0.5f];
+            if (!transformatorName) {
+                transformatorName = [NSString stringWithFormat:@"Новый №%ld",(long)indexPath.row];
             }
             
-            cell.textLabel.text = text;
+            cell.textLabel.text = transformatorName;
         }
         
         return cell;
     }
 }
 
-/*
 // Override to support conditional editing of the table view.
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
     // Return NO if you do not want the specified item to be editable.
+    if ([indexPath row] == 0) {
+        return NO;
+    }
     return YES;
 }
-*/
 
-/*
 // Override to support editing the table view.
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
     if (editingStyle == UITableViewCellEditingStyleDelete) {
+        
+        NSMutableDictionary *parameters = [NSMutableDictionary dictionaryWithDictionary:[ENAuth parametersForAPI]];
+        [parameters setObject:@"rmTransformer" forKey:@"act"];
+        
+        NSString *transf = [NSString stringWithFormat:@"%@",[[_transformators objectAtIndex:indexPath.row-1] objectForKey:@"id"]];
+        [parameters setObject:transf forKey:@"transf"];
+        
+        NSMutableArray *transformatorsMutable = [NSMutableArray arrayWithArray:_transformators];
+        [transformatorsMutable removeObjectAtIndex:indexPath.row-1];
+        _transformators = transformatorsMutable;
+        
+        // NSLog(@"Delete Transformer params: %@",parameters);
+        
+        AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+        [manager POST:@"http://enmrk.ru/api/transformers/add/" parameters:parameters success:^(AFHTTPRequestOperation *operation, id responseObject) {
+            
+            NSLog(@"delete Transformers: %@",responseObject);
+            
+            NSString *status = [responseObject objectForKey:@"status"];
+            
+            if ([status isEqualToString:@"OK"]) {
+                
+                [[ENAuth alloc] reAuthWithResponseObject:responseObject];
+                
+            } else {
+                NSString *error = [responseObject objectForKey:@"error"];
+                UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Error" message:error delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+                [alertView show];
+                [[ENAuth alloc] reAuthWithResponseObject:responseObject];
+            }
+            
+        } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+            UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Error" message:[error localizedDescription] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+            [alertView show];
+        }];
+        
         // Delete the row from the data source
         [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
-    } else if (editingStyle == UITableViewCellEditingStyleInsert) {
-        // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-    }   
+    }
 }
-*/
-
-/*
-// Override to support rearranging the table view.
-- (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath {
-}
-*/
-
-/*
-// Override to support conditional rearranging of the table view.
-- (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath {
-    // Return NO if you do not want the item to be re-orderable.
-    return YES;
-}
-*/
 
 #pragma mark - Navigation
 
@@ -140,9 +316,31 @@
     if ([[segue identifier] isEqualToString:@"detailSegue"]) {
         NSIndexPath *indexPath = [self.tableView indexPathForSelectedRow];
         if (indexPath) {
-            ENTransformator *transformator = [_transformators objectAtIndex:indexPath.row-1];
+            NSMutableDictionary *transformator = [_transformators objectAtIndex:indexPath.row-1];
             [segue.destinationViewController setTransformator:transformator];
+            [segue.destinationViewController setTransformatorRow:indexPath.row-1];
+            [segue.destinationViewController setProperties:_properties];
+            [segue.destinationViewController setPlaygrounds:_playgrounds];
+            [segue.destinationViewController setPlaygroundsStatuses:_playgroundsStatuses];
+            if ([transformator objectForKey:@"added"]) {
+                [segue.destinationViewController setIsNew:[NSNumber numberWithInt:0]];
+            } else {
+                [segue.destinationViewController setIsNew:[NSNumber numberWithInt:1]];
+            }
+            [segue.destinationViewController setDescriptionField:_descriptionField];
+            [segue.destinationViewController setImsTypes:_imsTypes];
         }
+    }
+    if ([[segue identifier] isEqualToString:@"newSegue"]) {
+        NSMutableDictionary *transformator = [ENTransformator createNewTransformator];
+        [segue.destinationViewController setTransformator:transformator];
+        NSLog(@"Transformator: %@", transformator);
+        [segue.destinationViewController setProperties:_properties];
+        [segue.destinationViewController setPlaygrounds:_playgrounds];
+        [segue.destinationViewController setPlaygroundsStatuses:_playgroundsStatuses];
+        [segue.destinationViewController setImsTypes:_imsTypes];
+        [segue.destinationViewController setIsNew:[NSNumber numberWithInt:1]];
+        [segue.destinationViewController setDescriptionField:_descriptionField];
     }
 }
 @end
