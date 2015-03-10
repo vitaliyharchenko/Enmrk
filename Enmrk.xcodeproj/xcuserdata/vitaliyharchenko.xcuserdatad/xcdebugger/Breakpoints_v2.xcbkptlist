@@ -2351,6 +2351,36 @@
             endingLineNumber = "58"
             landmarkName = "-viewWillAppear:"
             landmarkType = "5">
+            <Locations>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "-[TapeViewController viewWillAppear:]"
+                  moduleName = "Enmrk"
+                  urlString = "file:///Users/vitaliyharchenko/Dev/iOS/Enmrk/Enmrk/TapeViewController.m"
+                  timestampString = "447675486.113562"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "58"
+                  endingLineNumber = "58"
+                  offsetFromSymbolStart = "2140">
+               </Location>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "-[TapeViewController viewWillAppear:]"
+                  moduleName = "Enmrk"
+                  urlString = "file:///Users/vitaliyharchenko/Dev/iOS/Enmrk/Enmrk/TapeViewController.m"
+                  timestampString = "447675486.113868"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "58"
+                  endingLineNumber = "58"
+                  offsetFromSymbolStart = "2162">
+               </Location>
+            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
