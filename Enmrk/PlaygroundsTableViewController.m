@@ -30,11 +30,11 @@
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
 }
 
-- (void)viewWillAppear:(BOOL)animated {
-    
+- (IBAction)unwindToList:(UIStoryboardSegue *)segue {
+    [self.tableView reloadData];
 }
 
-- (IBAction)unwindToList:(UIStoryboardSegue *)segue {
+- (void)reloadData{
     [self.tableView reloadData];
 }
 

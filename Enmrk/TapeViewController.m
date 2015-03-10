@@ -46,12 +46,11 @@
         }
     } else if (_descriptionField) {
         _selectedValue = [ENTransformator parseDescriptionForField:_descriptionField forTransformator:_transformator];
-        NSString *selectedValueStr = [NSString stringWithFormat:@"%@",_selectedValue];
         NSString *propertyName = [_descriptionField objectForKey:@"name"];
         self.navigationItem.title = propertyName;
         self.navigationItem.leftBarButtonItem = nil;
         self.label.text = @"Наберите описание или продиктуйте";
-        if (![selectedValueStr isEqualToString:@""]) {
+        if (_selectedValue) {
             self.textView.text = [NSString stringWithFormat:@"%@",_selectedValue];
         }
         [self.textView sizeToFit];
@@ -71,15 +70,6 @@
             self.textView.text = [NSString stringWithFormat:@"%ld",(long)price];
         }
     }
-    self.textView.delegate = self;
-}
-
-- (BOOL)textViewShouldBeginEditing:(UITextView *)textView {
-    return YES;
-}
-
-- (void) showKeyboard {
-
 }
 
 - (void)didReceiveMemoryWarning {
@@ -93,7 +83,6 @@
     NSString *transf = [NSString stringWithFormat:@"%@",self.textView.text];
     
     NSInteger selectedFieldId = 0;
-    BOOL isPrice = NO;
     
     if (_selectedProperty) {
         selectedFieldId = [[_selectedProperty objectForKey:@"id"] integerValue];
@@ -110,7 +99,6 @@
         selectedFieldId = [[_selectedPlayground objectForKey:@"id"] integerValue];
         NSMutableDictionary *newTransformator = [ENTransformator editTransformator:_transformator setPrice:transf forPlayground:_selectedPlayground];
         _transformator = newTransformator;
-        isPrice = YES;
     }
     
     Reachability *networkReachability = [Reachability reachabilityForInternetConnection];
@@ -154,9 +142,7 @@
                 
                 [segue.destinationViewController setTransformator:_transformator];
                 [segue.destinationViewController setIsNew:_isNew];
-                if (isPrice) {
-                    [segue.destinationViewController reloadData];
-                }
+                [segue.destinationViewController reloadData];
                 
                 [[ENAuth alloc] reAuthWithResponseObject:responseObject];
                 
