@@ -34,7 +34,7 @@
 + (NSString *)parseDescriptionForField:(NSDictionary *)selectedProperty forTransformator:(NSMutableDictionary *)transformator;
 + (NSString *)parseStatusForTransformator:(NSDictionary *)transformator forPlayground:(NSDictionary *)playground forPlaygroundStatuses:(NSArray *)playgroundsStatuses;
 + (NSNumber *)parseStatusIdForTransformator:(NSDictionary *)transformator forPlayground:(NSDictionary *)playground forPlaygroundStatuses:(NSArray *)playgroundsStatuses;
-+ (NSInteger)parsePriceForTransformator:(NSDictionary *)transformator forPlayground:(NSDictionary *)selectedPlayground;
++ (NSString *)parsePriceForTransformator:(NSDictionary *)transformator forPlayground:(NSDictionary *)selectedPlayground;
 + (NSString *)parseImageUrlForTransformator:(NSDictionary *)transformator forImsType:(NSDictionary *)imsType;
 
 + (NSMutableDictionary *)editTransformator:(NSMutableDictionary *)transformator setValue:(NSInteger)value forProperty:(NSDictionary *)selectedProperty;

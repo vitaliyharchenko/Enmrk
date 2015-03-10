@@ -91,7 +91,7 @@
         UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Price" forIndexPath:indexPath];
         
         cell.textLabel.text = @"Цена";
-        NSString *price = [NSString stringWithFormat:@"%ld", (long)[ENTransformator parsePriceForTransformator:_transformator forPlayground:_selectedPlayground]];
+        NSString *price = [NSString stringWithFormat:@"%@", [ENTransformator parsePriceForTransformator:_transformator forPlayground:_selectedPlayground]];
         if (!([price isEqualToString:@"0"])) {
             cell.detailTextLabel.text = price;
         }

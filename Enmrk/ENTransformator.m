@@ -253,7 +253,7 @@
     return @"Не выкладывалось";
 }
 
-+ (NSInteger)parsePriceForTransformator:(NSDictionary *)transformator forPlayground:(NSDictionary *)playground {
++ (NSString *)parsePriceForTransformator:(NSDictionary *)transformator forPlayground:(NSDictionary *)playground {
     
     NSNumber *selectedPlaygroundId = [playground objectForKey:@"id"];
     
@@ -270,7 +270,7 @@
             
             if (transfPlaygroundId == [selectedPlaygroundId integerValue]) {
                 if (!(transfPlaygroundPrice == 0)) {
-                    return transfPlaygroundPrice;
+                    return transformatorPrice;
                 }
             }
         }
