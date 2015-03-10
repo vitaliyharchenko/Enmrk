@@ -36,11 +36,11 @@
 
 - (void)viewDidLoad {
     
-    [super viewDidLoad];
-    
     self.navigationItem.title = @"Марка трансформатора";
     
     [self.tableView reloadData];
+    
+    [super viewDidLoad];
 }
 
 - (void)didReceiveMemoryWarning {

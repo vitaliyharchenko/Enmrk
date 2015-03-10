@@ -87,7 +87,7 @@
             NSDictionary *obj = [properties objectAtIndex:optionId];
             [sortedOptions addObject:obj];
         } else {
-            if (![[[fields objectAtIndex:optionId-propCount] objectForKey:@"name"] isEqualToString:@"Описание"]) {
+            if (![[[fields objectAtIndex:optionId-propCount] objectForKey:@"name"] isEqualToString:@"description"]) {
                 if (![[[fields objectAtIndex:optionId-propCount] objectForKey:@"name"] isEqualToString:@"price"]) {
                     NSDictionary *obj = [fields objectAtIndex:optionId-propCount];
                     [sortedOptions addObject:obj];
@@ -105,7 +105,7 @@
     for (i=0; i<(int)fieldsCount; i++) {
         NSDictionary *field = [fields objectAtIndex:i];
         NSString *name = [field objectForKey:@"name"];
-        if ([name isEqualToString:@"Описание"]) {
+        if ([name isEqualToString:@"description"]) {
             return field;
         }
     }
@@ -140,9 +140,8 @@
                     
                     if (selectedProp) {
                         NSMutableArray *values = [selectedProp objectForKey:@"values"];
-                        int l;
-                        for (l=0; l<values.count; l++) {
-                            NSDictionary *value = [values objectAtIndex:l];
+                        for (i=0; i<values.count; i++) {
+                            NSDictionary *value = [values objectAtIndex:i];
                             NSInteger valueId = [[value objectForKey:@"id"] integerValue];
                             if (valueId == val) {
                                 return [NSString stringWithFormat:@"%@", [value objectForKey:@"val"]];
@@ -186,9 +185,8 @@
             NSInteger val = [[property objectForKey:@"val"] integerValue];
             
             NSMutableArray *values = [selectedProperty objectForKey:@"values"];
-            int l;
-            for (l=0; l<values.count; l++) {
-                NSDictionary *value = [values objectAtIndex:l];
+            for (i=0; i<values.count; i++) {
+                NSDictionary *value = [values objectAtIndex:i];
                 NSInteger valueId = [[value objectForKey:@"id"] integerValue];
                 NSObject *valueVal = [value objectForKey:@"val"];
                 if (valueId == val) {
@@ -278,7 +276,7 @@
         }
     }
     
-    return 0;
+    return nil;
 }
 
 + (NSNumber *)parseStatusIdForTransformator:(NSDictionary *)transformator forPlayground:(NSDictionary *)playground forPlaygroundStatuses:(NSArray *)playgroundsStatuses {
@@ -322,26 +320,6 @@
 
 + (NSString *)parseImageUrlForTransformator:(NSDictionary *)transformator forImsType:(NSDictionary *)imsType{
     return nil;
-}
-
-+ (NSMutableArray *)parseImagesForTransformator:(NSDictionary *)transformator forImsType:(NSDictionary *)imsType {
-    
-    NSMutableArray *imagesArray = [[NSMutableArray alloc] init];
-    
-    NSInteger imageTypeId = [[imsType objectForKey:@"id"] integerValue];
-
-    NSMutableArray *images = [transformator objectForKey:@"ims"];
-    
-    int i;
-    for (i=0; i<images.count; i++) {
-        NSDictionary *image = [images objectAtIndex:i];
-        NSInteger currentId = [[image objectForKey:@"type"] integerValue];
-        if (currentId == imageTypeId) {
-            [imagesArray addObject:image];
-        }
-    }
-    
-    return imagesArray;
 }
 
 + (NSMutableDictionary *)editTransformator:(NSMutableDictionary *)transformator setValue:(NSInteger)value forProperty:(NSMutableDictionary *)selectedProperty {

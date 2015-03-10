@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface ImageViewController : UITableViewController <UIActionSheetDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate>
+@interface ImageViewController : UIViewController
 
 @property (weak, nonatomic) IBOutlet UIImageView *image;
 
@@ -16,6 +16,5 @@
 @property (strong,nonatomic) NSMutableDictionary *transformator;
 @property (strong,nonatomic) NSArray *properties;
 @property (strong,nonatomic) NSNumber *isNew;
-@property (strong,nonatomic) NSMutableArray *images;
 
 @end

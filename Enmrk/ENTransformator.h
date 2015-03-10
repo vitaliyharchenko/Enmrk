@@ -36,7 +36,6 @@
 + (NSNumber *)parseStatusIdForTransformator:(NSDictionary *)transformator forPlayground:(NSDictionary *)playground forPlaygroundStatuses:(NSArray *)playgroundsStatuses;
 + (NSInteger)parsePriceForTransformator:(NSDictionary *)transformator forPlayground:(NSDictionary *)selectedPlayground;
 + (NSString *)parseImageUrlForTransformator:(NSDictionary *)transformator forImsType:(NSDictionary *)imsType;
-+ (NSMutableArray *)parseImagesForTransformator:(NSDictionary *)transformator forImsType:(NSDictionary *)imsType;
 
 + (NSMutableDictionary *)editTransformator:(NSMutableDictionary *)transformator setValue:(NSInteger)value forProperty:(NSDictionary *)selectedProperty;
 + (NSMutableDictionary *)editTransformator:(NSMutableDictionary *)transformator setValue:(NSString *)value forField:(NSDictionary *)selectedProperty;
