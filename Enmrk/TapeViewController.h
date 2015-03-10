@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface TapeViewController : UIViewController
+@interface TapeViewController : UIViewController <UITextViewDelegate>
 
 @property (nonatomic, strong) NSDictionary *selectedProperty;
 @property (strong,nonatomic) NSMutableDictionary *transformator;
