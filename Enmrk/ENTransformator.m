@@ -500,4 +500,69 @@
     return newTransformator;
 }
 
++ (NSMutableDictionary *)editTransformator:(NSMutableDictionary *)transformator addImg:(NSDictionary *)img {
+    NSArray *imsPre = [transformator objectForKey:@"ims"];
+    NSMutableArray *ims = [[NSMutableArray alloc] init];
+    if (imsPre.count > 0) {
+        ims = [NSMutableArray arrayWithArray:imsPre];
+    }
+    [ims addObject:img];
+    
+    NSDictionary *newTransformatorPre = transformator;
+    NSMutableDictionary *newTransformator = [NSMutableDictionary dictionaryWithDictionary:newTransformatorPre];
+    [newTransformator setObject:ims forKey:@"ims"];
+    return newTransformator;
+}
+
++ (NSMutableDictionary *)editNewTransformator:(NSMutableDictionary *)transformator addImgData:(NSData *)imageData andImsType:(NSDictionary *)imsType {
+    
+    NSArray *imsPre = [transformator objectForKey:@"ims"];
+    NSMutableArray *ims = [[NSMutableArray alloc] init];
+    if (imsPre.count > 0) {
+        ims = [NSMutableArray arrayWithArray:imsPre];
+    }
+    
+    NSMutableDictionary *img = [[NSMutableDictionary alloc] init];
+    [img setObject:[NSString stringWithFormat:@"%@",[imsType objectForKey:@"id"]] forKey:@"type"];
+    [img setObject:imageData forKey:@"image"];
+    
+    [ims addObject:img];
+    
+    NSDictionary *newTransformatorPre = transformator;
+    NSMutableDictionary *newTransformator = [NSMutableDictionary dictionaryWithDictionary:newTransformatorPre];
+    [newTransformator setObject:ims forKey:@"ims"];
+    
+    return newTransformator;
+}
+
++ (NSMutableDictionary *)editTransformator:(NSMutableDictionary *)transformator deleteImg:(NSDictionary *)deleteImg {
+    
+    NSMutableArray *ims = [transformator objectForKey:@"ims"];
+    NSInteger delImageId = [[deleteImg objectForKey:@"id"] integerValue];
+    
+    int i;
+    for (i=0; i<ims.count; i++) {
+        NSDictionary *image = [ims objectAtIndex:i];
+        NSInteger currentId = [[image objectForKey:@"id"] integerValue];
+        if (currentId == delImageId) {
+            if (ims.count == 1) {
+                ims = nil;
+            } else {
+                [ims removeObjectAtIndex:i];
+            }
+        }
+    }
+    
+    NSDictionary *newTransformatorPre = transformator;
+    NSMutableDictionary *newTransformator = [NSMutableDictionary dictionaryWithDictionary:newTransformatorPre];
+    if (ims) {
+        [newTransformator setObject:ims forKey:@"ims"];
+    } else {
+        [newTransformator removeObjectForKey:@"ims"];
+    }
+    
+    return newTransformator;
+
+}
+
 @end

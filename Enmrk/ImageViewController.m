@@ -12,6 +12,8 @@
 #import "ImageTableViewCell.h"
 #import "AFNetworking.h"
 #import "ENAuth.h"
+#import "Reachability.h"
+#import "ImagesTableViewController.h"
 
 @interface ImageViewController ()
 
@@ -22,9 +24,14 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    _images = [ENTransformator parseImagesForTransformator:_transformator forImsType:_imsType];
+    [self loadInitial];
     
     self.navigationItem.title = [_imsType objectForKey:@"name"];
+}
+
+- (void)loadInitial {
+    _images = [ENTransformator parseImagesForTransformator:_transformator forImsType:_imsType];
+    [self.tableView reloadData];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -60,14 +67,17 @@
     
     ImageTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Image Cell 1" forIndexPath:indexPath];
     
-    #warning http://www.appcoda.com/ios-programming-camera-iphone-app/
-    
     NSDictionary *image = [_images objectAtIndex:[indexPath row]-1];
     
     NSString *urlString = [image objectForKey:@"url"];
-    NSURL *imgUrl = [NSURL URLWithString:urlString];
-    
-    [cell.cellImageView setImageWithURL:imgUrl];
+    if (urlString) {
+        NSURL *imgUrl = [NSURL URLWithString:urlString];
+        [cell.cellImageView setImageWithURL:imgUrl];
+    } else {
+        NSData *imsData = [image objectForKey:@"image"];
+        UIImage *image = [UIImage imageWithData:imsData];
+        [cell.cellImageView setImage:image];
+    }
     
     return cell;
 }
@@ -92,48 +102,65 @@
 
 #warning deleting images
 // Override to support editing the table view.
-//- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
-//    if (editingStyle == UITableViewCellEditingStyleDelete) {
-//        
-//        NSMutableDictionary *parameters = [NSMutableDictionary dictionaryWithDictionary:[ENAuth parametersForAPI]];
-//        [parameters setObject:@"rmTransformer" forKey:@"act"];
-//        
-//        NSString *transf = [NSString stringWithFormat:@"%@",[[_transformators objectAtIndex:indexPath.row-1] objectForKey:@"id"]];
-//        [parameters setObject:transf forKey:@"transf"];
-//        
-//        NSMutableArray *transformatorsMutable = [NSMutableArray arrayWithArray:_transformators];
-//        [transformatorsMutable removeObjectAtIndex:indexPath.row-1];
-//        _transformators = transformatorsMutable;
-//        
-//        // NSLog(@"Delete Transformer params: %@",parameters);
-//        
-//        AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
-//        [manager POST:@"http://enmrk.ru/api/transformers/add/" parameters:parameters success:^(AFHTTPRequestOperation *operation, id responseObject) {
-//            
-//            NSLog(@"delete Transformers: %@",responseObject);
-//            
-//            NSString *status = [responseObject objectForKey:@"status"];
-//            
-//            if ([status isEqualToString:@"OK"]) {
-//                
-//                [[ENAuth alloc] reAuthWithResponseObject:responseObject];
-//                
-//            } else {
-//                NSString *error = [responseObject objectForKey:@"error"];
-//                UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Error" message:error delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-//                [alertView show];
-//                [[ENAuth alloc] reAuthWithResponseObject:responseObject];
-//            }
-//            
-//        } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-//            UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Error" message:[error localizedDescription] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-//            [alertView show];
-//        }];
-//        
-//        // Delete the row from the data source
-//        [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
-//    }
-//}
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (editingStyle == UITableViewCellEditingStyleDelete) {
+        
+        Reachability *networkReachability = [Reachability reachabilityForInternetConnection];
+        NetworkStatus networkStatus = [networkReachability currentReachabilityStatus];
+        
+        if (networkStatus != NotReachable) {
+        
+            NSMutableDictionary *parameters = [NSMutableDictionary dictionaryWithDictionary:[ENAuth parametersForAPI]];
+            [parameters setObject:@"editTransformer" forKey:@"act"];
+            
+            NSDictionary *img = [_images objectAtIndex:indexPath.row-1];
+            
+            NSString *imgId = [NSString stringWithFormat:@"%@",[img objectForKey:@"id"]];
+            [parameters setObject:imgId forKey:@"ims[0][id]"];
+            [parameters setObject:@"rm" forKey:@"ims[0][act]"];
+            
+            NSString *transf = [NSString stringWithFormat:@"%@",[_transformator objectForKey:@"id"]];
+            [parameters setObject:transf forKey:@"transf"];
+            
+            AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+            [manager POST:@"http://enmrk.ru/api/transformers/add/" parameters:parameters success:^(AFHTTPRequestOperation *operation, id responseObject) {
+                
+                NSLog(@"delete Transformers: %@",responseObject);
+                
+                NSString *status = [responseObject objectForKey:@"status"];
+                
+                if ([status isEqualToString:@"OK"]) {
+                    
+                    NSMutableDictionary *transformatorMutable = [NSMutableDictionary dictionaryWithDictionary:_transformator];
+                    NSDictionary *deleteImg = [_images objectAtIndex:indexPath.row-1];
+                    
+                    transformatorMutable = [ENTransformator editTransformator:_transformator deleteImg:deleteImg];
+                    _transformator = transformatorMutable;
+                    
+                    [[ENAuth alloc] reAuthWithResponseObject:responseObject];
+                    
+                    _images = [ENTransformator parseImagesForTransformator:_transformator forImsType:_imsType];
+                    
+                    [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
+                    
+                } else {
+                    NSString *error = [responseObject objectForKey:@"error"];
+                    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Error" message:error delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+                    [alertView show];
+                    [[ENAuth alloc] reAuthWithResponseObject:responseObject];
+                }
+                
+            } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+                UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Error" message:[error localizedDescription] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+                [alertView show];
+            }];
+        
+        } else {
+            UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Ошибка" message:@"Работа с изображениями невозможна. Отсутствует подключение к интернету." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+            [alertView show];
+        }
+    }
+}
 
 
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
@@ -163,47 +190,96 @@
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info {
     
     UIImage *chosenImage = info[UIImagePickerControllerEditedImage];
-    NSData *imageData = UIImageJPEGRepresentation(chosenImage, 0.5);
+    NSData *imageData = UIImagePNGRepresentation(chosenImage);
     
     //NSMutableDictionary *newTransformator = [ENTransformator editTransformator:_transformator addImage:imageData forImsType:_imsType];
     //_transformator = newTransformator;
     
     NSNumber *transformatorId = [_transformator objectForKey:@"id"];
     
-    AFHTTPRequestOperationManager *manager = [[AFHTTPRequestOperationManager alloc] initWithBaseURL:[NSURL URLWithString:@"http://enmrk.ru/api/transformers/add/"]];
+    Reachability *networkReachability = [Reachability reachabilityForInternetConnection];
+    NetworkStatus networkStatus = [networkReachability currentReachabilityStatus];
     
-    NSMutableDictionary *parameters = [NSMutableDictionary dictionaryWithDictionary:[ENAuth parametersForAPI]];
-    [parameters setObject:@"editTransformer" forKey:@"act"];
+    if (networkStatus != NotReachable) {
     
-    AFHTTPRequestOperation *op = [manager POST:@"http://enmrk.ru/api/transformers/add/" parameters:parameters constructingBodyWithBlock:^(id<AFMultipartFormData> formData) {
-        //do not put image inside parameters dictionary as I did, but append it!
-        [formData appendPartWithFileData:imageData name:[_imsType objectForKey:@"name"] fileName:@"photo.jpg" mimeType:@"image/jpeg"];
-    } success:^(AFHTTPRequestOperation *operation, id responseObject) {
-        NSLog(@"Success: %@ ***** %@", operation.responseString, responseObject);
+        AFHTTPRequestOperationManager *manager = [[AFHTTPRequestOperationManager alloc] init];
+        manager.responseSerializer.acceptableContentTypes = [NSSet setWithObject:@"text/html"];
+        manager.responseSerializer = [AFJSONResponseSerializer serializerWithReadingOptions:NSJSONReadingAllowFragments];
         
-        if (!transformatorId) {
-            NSNumber *insertedId = [responseObject objectForKey:@"inserted_id"];
-            [_transformator setValue:insertedId forKey:@"id"];
+        NSMutableDictionary *parameters = [NSMutableDictionary dictionaryWithDictionary:[ENAuth parametersForAPI]];
+        [parameters setObject:@"editTransformer" forKey:@"act"];
+        
+        [parameters setObject:@"add" forKey:@"ims[0][act]"];
+        [parameters setObject:[NSString stringWithFormat:@"%@",[_imsType objectForKey:@"id"]] forKey:@"ims[0][type]"];
+        [parameters setObject:@"photo" forKey:@"ims[0][fileid]"];
+        
+        if (!(transformatorId == 0)) {
+            NSString *transf = [NSString stringWithFormat:@"%@",[_transformator objectForKey:@"id"]];
+            [parameters setObject:transf forKey:@"transf"];
         }
         
-    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-        NSLog(@"Error: %@ ***** %@", operation.responseString, error);
-    }];
-    [op start];
-    
-    
-    [picker dismissViewControllerAnimated:YES completion:NULL];
+        AFHTTPRequestOperation *op = [manager POST:@"http://enmrk.ru/api/transformers/add/" parameters:parameters constructingBodyWithBlock:^(id<AFMultipartFormData> formData) {
+            //do not put image inside parameters dictionary as I did, but append it!
+            [formData appendPartWithFileData:imageData name:@"photo" fileName:@"photo.png" mimeType:@"image/png"];
+        } success:^(AFHTTPRequestOperation *operation, id responseObject) {
+            NSString *status = [responseObject objectForKey:@"status"];
+            
+            if ([status isEqualToString:@"OK"]) {
+                
+                if (!transformatorId) {
+                    NSNumber *insertedId = [responseObject objectForKey:@"inserted_id"];
+                    [_transformator setValue:insertedId forKey:@"id"];
+                }
+                
+                NSDictionary *img = [[[responseObject objectForKey:@"report"] objectForKey:@"ims"] objectAtIndex:0];
+                if (img) {
+                    NSMutableDictionary *newTransformator = [ENTransformator editTransformator:_transformator addImg:img];
+                    _transformator = newTransformator;
+                } else {
+                    NSString *error = [responseObject objectForKey:@"error"];
+                    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Ошибка" message:error delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+                    [alertView show];
+                }
+                
+                [[ENAuth alloc] reAuthWithResponseObject:responseObject];
+                
+                [self loadInitial];
+                
+            } else {
+                [[ENAuth alloc] reAuthWithResponseObject:responseObject];
+                NSString *error = [responseObject objectForKey:@"error"];
+                UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Error" message:error delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+                [alertView show];
+            }
+            
+        } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+            UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Error" message:[error localizedDescription] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+            [alertView show];
+            NSLog(@"%@",error);
+        }];
+        [op start];
+        
+        
+        [picker dismissViewControllerAnimated:YES completion:NULL];
+    } else {
+        NSMutableDictionary *newTransformator = [ENTransformator editNewTransformator:_transformator addImgData:imageData andImsType:_imsType];
+        _transformator = newTransformator;
+        
+        [self loadInitial];
+        
+        [picker dismissViewControllerAnimated:YES completion:NULL];
+    }
     
 }
 
-/*
+
 #pragma mark - Navigation
 
 // In a storyboard-based application, you will often want to do a little preparation before navigation
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
+    [segue.destinationViewController setTransformator:_transformator];
 }
-*/
+
 
 @end

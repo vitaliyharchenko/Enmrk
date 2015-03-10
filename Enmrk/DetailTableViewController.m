@@ -68,10 +68,10 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     
+    Reachability *networkReachability = [Reachability reachabilityForInternetConnection];
+    NetworkStatus networkStatus = [networkReachability currentReachabilityStatus];
+    
     if ([indexPath row] == 2) {
-        
-        Reachability *networkReachability = [Reachability reachabilityForInternetConnection];
-        NetworkStatus networkStatus = [networkReachability currentReachabilityStatus];
         
         if ([_isNew integerValue] == 0) {
             if (networkStatus == NotReachable)
@@ -85,6 +85,23 @@
             }
         } else {
             [self performSegueWithIdentifier:@"descriptionSegue" sender:self];
+        }
+    }
+    
+    if ([indexPath row] == 1) {
+        
+        if ([_isNew integerValue] == 0) {
+            if (networkStatus == NotReachable)
+            {
+                UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Ошибка" message:@"Просмотр изображений закрыт. Отсутствует подключение к интернету" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+                [alertView show];
+            }
+            else
+            {
+                [self performSegueWithIdentifier:@"photoSegue" sender:self];
+            }
+        } else {
+            [self performSegueWithIdentifier:@"photoSegue" sender:self];
         }
     }
 }

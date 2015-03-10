@@ -9,6 +9,7 @@
 #import "PlaygroundsTableViewController.h"
 #import "ENTransformator.h"
 #import "StatusViewController.h"
+#import "Reachability.h"
 
 @interface PlaygroundsTableViewController ()
 
@@ -99,6 +100,28 @@
     return YES;
 }
 */
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+    Reachability *networkReachability = [Reachability reachabilityForInternetConnection];
+    NetworkStatus networkStatus = [networkReachability currentReachabilityStatus];
+    
+    if ([_isNew integerValue] == 0) {
+        if (networkStatus == NotReachable)
+        {
+            UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Ошибка" message:@"Редактирование объявлений закрыто. Отсутствует подключение к интернету" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+            [alertView show];
+            [tableView deselectRowAtIndexPath:indexPath animated:YES];
+        }
+        else
+        {
+            [self performSegueWithIdentifier:@"statusSegue" sender:self];
+        }
+    } else {
+        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Ошибка" message:@"Работа с публикацией объявлений невозможна. Отсутствует подключение к интернету. Сначала синхронизируйте добавленные трансформаторы." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+        [alertView show];
+        [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    }
+}
 
 
 #pragma mark - Navigation

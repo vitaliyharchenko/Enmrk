@@ -27,6 +27,10 @@
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
 }
 
+- (IBAction)unwindToList:(UIStoryboardSegue *)segue {
+    
+}
+
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
@@ -103,6 +107,8 @@
         NSDictionary *imsType = [_imsTypes objectAtIndex:[indexPath row]];
         [segue.destinationViewController setImsType:imsType];
         
+    } else {
+        [segue.destinationViewController setTransformator:_transformator];
     }
 }
 

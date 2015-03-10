@@ -15,4 +15,6 @@
 @property (strong,nonatomic) NSArray *properties;
 @property (strong,nonatomic) NSNumber *isNew;
 
+- (IBAction)unwindToList:(UIStoryboardSegue *)segue;
+
 @end

@@ -455,7 +455,7 @@
             </objects>
             <point key="canvasLocation" x="1444" y="263"/>
         </scene>
-        <!--Image View Controller-->
+        <!--Title-->
         <scene sceneID="xjO-0r-vL9">
             <objects>
                 <tableViewController id="maA-5k-DvX" customClass="ImageViewController" sceneMemberID="viewController">
@@ -508,12 +508,20 @@
                             <outlet property="delegate" destination="maA-5k-DvX" id="vVb-2L-cph"/>
                         </connections>
                     </tableView>
+                    <navigationItem key="navigationItem" title="Title" id="vRl-Lc-nNG">
+                        <barButtonItem key="leftBarButtonItem" title="Назад" id="b2H-Ah-QTU">
+                            <connections>
+                                <segue destination="Lbe-29-hdY" kind="unwind" unwindAction="unwindToList:" id="nbU-UA-t9I"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="kCY-gb-IGj" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <exit id="Lbe-29-hdY" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
             <point key="canvasLocation" x="2171" y="-1115"/>
         </scene>
-        <!--Images Table View Controller-->
+        <!--Title-->
         <scene sceneID="zZr-G3-j3Z">
             <objects>
                 <tableViewController id="fZo-CN-uZ6" customClass="ImagesTableViewController" sceneMemberID="viewController">
@@ -537,8 +545,18 @@
                             <outlet property="delegate" destination="fZo-CN-uZ6" id="gyV-aF-ilq"/>
                         </connections>
                     </tableView>
+                    <toolbarItems/>
+                    <navigationItem key="navigationItem" title="Title" id="Q8b-NW-o6U">
+                        <barButtonItem key="leftBarButtonItem" title="Назад" id="Kev-Sv-g6r">
+                            <connections>
+                                <segue destination="rW1-4l-Ntg" kind="unwind" unwindAction="unwindToList:" id="aeg-Id-yNY"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                    <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="fen-VV-Od2" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <exit id="rW1-4l-Ntg" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
             <point key="canvasLocation" x="2171" y="-423"/>
         </scene>
@@ -570,9 +588,6 @@
                                         </label>
                                     </subviews>
                                 </tableViewCellContentView>
-                                <connections>
-                                    <segue destination="f0s-jf-wJz" kind="show" identifier="statusSegue" id="a1E-XA-07L"/>
-                                </connections>
                             </tableViewCell>
                         </prototypes>
                         <connections>
@@ -587,6 +602,9 @@
                             </connections>
                         </barButtonItem>
                     </navigationItem>
+                    <connections>
+                        <segue destination="f0s-jf-wJz" kind="show" identifier="statusSegue" id="dAh-PO-v7C"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="TSn-UM-ctD" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <exit id="apv-Kg-ReO" userLabel="Exit" sceneMemberID="exit"/>
@@ -634,9 +652,6 @@
                                                 </label>
                                             </subviews>
                                         </tableViewCellContentView>
-                                        <connections>
-                                            <segue destination="fZo-CN-uZ6" kind="show" identifier="photoSegue" id="K2A-sx-62H"/>
-                                        </connections>
                                     </tableViewCell>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="Description Cell" textLabel="3zi-c8-r5l" style="IBUITableViewCellStyleDefault" id="2He-7f-dkS">
                                         <autoresizingMask key="autoresizingMask"/>
@@ -686,6 +701,7 @@
                     </navigationItem>
                     <connections>
                         <segue destination="JIs-ii-yfE" kind="show" identifier="descriptionSegue" id="eFu-8H-yjI"/>
+                        <segue destination="fZo-CN-uZ6" kind="show" identifier="photoSegue" id="fC5-8K-E5h"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="cKM-O6-bFq" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -968,6 +984,6 @@
     </scenes>
     <inferredMetricsTieBreakers>
         <segue reference="euO-3p-5lo"/>
-        <segue reference="EHp-iA-fWq"/>
+        <segue reference="eFu-8H-yjI"/>
     </inferredMetricsTieBreakers>
 </document>

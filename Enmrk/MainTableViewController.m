@@ -16,6 +16,8 @@
 
 @interface MainTableViewController ()
 
+@property (strong,nonatomic) NSNumber *currentId;
+
 @end
 
 
@@ -96,73 +98,180 @@
 
 - (void)syncFirst{
 
-    NSDictionary *transformator = [_transformators objectAtIndex:0];
-    NSString *name = [transformator objectForKey:@"name"];
-    
     [[UIApplication sharedApplication] beginIgnoringInteractionEvents];
     
-    if (!name) {
-        
-        NSMutableDictionary *parameters = [NSMutableDictionary dictionaryWithDictionary:[ENAuth parametersForAPI]];
-        [parameters setObject:@"editTransformer" forKey:@"act"];
-        
-        NSArray *fields = [transformator objectForKey:@"fields"];
-        
-        int i;
-        if (fields.count > 0) {
-            for (i=0; i<fields.count; i++) {
-                NSDictionary *field = [fields objectAtIndex:i];
-                NSString *fieldId = [NSString stringWithFormat:@"fields[%@]",[field objectForKey:@"id"]];
-                NSString *fieldVal = [NSString stringWithFormat:@"%@",[field objectForKey:@"val"]];
-                [parameters setObject:fieldVal forKey:fieldId];
-            }
+    int newCount = 0;
+    int k;
+    for (k=0; k<_transformators.count; k++) {
+        NSDictionary *transformator = [_transformators objectAtIndex:0];
+        NSString *name = [transformator objectForKey:@"name"];
+        if (!name) {
+            newCount++;
         }
-        
-        NSArray *properties = [transformator objectForKey:@"properties"];
-        
-        if (properties.count > 0) {
-            for (i=0; i<properties.count; i++) {
-                NSDictionary *property = [properties objectAtIndex:i];
-                NSString *propId = [NSString stringWithFormat:@"properties[%@]",[property objectForKey:@"id"]];
-                NSString *propVal = [NSString stringWithFormat:@"%@",[property objectForKey:@"val"]];
-                [parameters setObject:propVal forKey:propId];
+    }
+    
+    if (newCount>0) {
+        int l;
+        for (l=0; l<newCount; l++) {
+            __block NSDictionary *transformator = [_transformators objectAtIndex:0];
+            
+            //transformator sync block begin
+            
+            NSMutableDictionary *parameters = [NSMutableDictionary dictionaryWithDictionary:[ENAuth parametersForAPI]];
+            [parameters setObject:@"editTransformer" forKey:@"act"];
+            
+            NSArray *fields = [transformator objectForKey:@"fields"];
+            
+            int i;
+            if (fields.count > 0) {
+                for (i=0; i<fields.count; i++) {
+                    NSDictionary *field = [fields objectAtIndex:i];
+                    NSString *fieldId = [NSString stringWithFormat:@"fields[%@]",[field objectForKey:@"id"]];
+                    NSString *fieldVal = [NSString stringWithFormat:@"%@",[field objectForKey:@"val"]];
+                    [parameters setObject:fieldVal forKey:fieldId];
+                }
             }
-        }
-        
-        #warning sync playgrounds
-        
-        AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
-        
-        [manager POST:@"http://enmrk.ru/api/transformers/add/" parameters:parameters success:^(AFHTTPRequestOperation *operation, id responseObject) {
             
-            NSLog(@"Sync Transformers: %@",responseObject);
+            NSArray *properties = [transformator objectForKey:@"properties"];
             
-            NSString *status = [responseObject objectForKey:@"status"];
+            if (properties.count > 0) {
+                for (i=0; i<properties.count; i++) {
+                    NSDictionary *property = [properties objectAtIndex:i];
+                    NSString *propId = [NSString stringWithFormat:@"properties[%@]",[property objectForKey:@"id"]];
+                    NSString *propVal = [NSString stringWithFormat:@"%@",[property objectForKey:@"val"]];
+                    [parameters setObject:propVal forKey:propId];
+                }
+            }
             
-            if ([status isEqualToString:@"OK"]) {
+            __block BOOL done = NO;
+            
+            AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+            
+            [manager POST:@"http://enmrk.ru/api/transformers/add/" parameters:parameters success:^(AFHTTPRequestOperation *operation, id responseObject) {
                 
-                [[ENAuth alloc] reAuthWithResponseObject:responseObject];
-                NSMutableArray *transformatorsMutable = [NSMutableArray arrayWithArray:_transformators];
-                [transformatorsMutable removeObjectAtIndex:0];
-                _transformators = transformatorsMutable;
+                NSLog(@"Sync Transformers: %@",responseObject);
                 
-                [self.tableView reloadData];
+                NSString *status = [responseObject objectForKey:@"status"];
                 
-            } else {
+                if ([status isEqualToString:@"OK"]) {
+                    
+                    NSNumber *insertedId = [responseObject objectForKey:@"inserted_id"];
+                    _currentId = insertedId;
+                    
+                    [[ENAuth alloc] reAuthWithResponseObject:responseObject];
+                    
+#warning sync ims
+                    
+                    NSArray *ims = [transformator objectForKey:@"ims"];
+                    if (ims) {
+                        int r;
+                        for (r=0; r<ims.count; r++) {
+                            
+                            __block BOOL doneImg = NO;
+                            
+                            //image sync block begin
+                            
+                            NSDictionary *img = [ims objectAtIndex:r];
+                            
+                            AFHTTPRequestOperationManager *manager = [[AFHTTPRequestOperationManager alloc] init];
+                            manager.responseSerializer.acceptableContentTypes = [NSSet setWithObject:@"text/html"];
+                            manager.responseSerializer = [AFJSONResponseSerializer serializerWithReadingOptions:NSJSONReadingAllowFragments];
+                            
+                            NSMutableDictionary *parameters = [NSMutableDictionary dictionaryWithDictionary:[ENAuth parametersForAPI]];
+                            [parameters setObject:@"editTransformer" forKey:@"act"];
+                            
+                            [parameters setObject:@"add" forKey:@"ims[0][act]"];
+                            [parameters setObject:[NSString stringWithFormat:@"%@",[img objectForKey:@"type"]] forKey:@"ims[0][type]"];
+                            [parameters setObject:@"photo" forKey:@"ims[0][fileid]"];
+                            [parameters setObject:[NSString stringWithFormat:@"%@",_currentId] forKey:@"transf"];
+                            
+                            NSData *imageData = [img objectForKey:@"image"];
+                            
+                            AFHTTPRequestOperation *op = [manager POST:@"http://enmrk.ru/api/transformers/add/" parameters:parameters constructingBodyWithBlock:^(id<AFMultipartFormData> formData) {
+                                //do not put image inside parameters dictionary as I did, but append it!
+                                [formData appendPartWithFileData:imageData name:@"photo" fileName:@"photo.png" mimeType:@"image/png"];
+                            } success:^(AFHTTPRequestOperation *operation, id responseObject) {
+                                NSString *status = [responseObject objectForKey:@"status"];
+                                
+                                if ([status isEqualToString:@"OK"]) {
+                                    
+                                    [[ENAuth alloc] reAuthWithResponseObject:responseObject];
+                                    
+                                    doneImg = YES;
+                                    
+                                } else {
+                                    [[ENAuth alloc] reAuthWithResponseObject:responseObject];
+                                    NSString *error = [responseObject objectForKey:@"error"];
+                                    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Error" message:error delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+                                    [alertView show];
+                                    
+                                    doneImg = YES;
+                                }
+                                
+                            } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+                                UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Error" message:[error localizedDescription] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+                                [alertView show];
+                                NSLog(@"%@",error);
+                                
+                                doneImg = YES;
+                            }];
+                            [op start];
+                            
+                            //image sync block end
+                            
+                            int w = 0;
+                            
+                            while (!doneImg)
+                            {
+                                [NSRunLoop.currentRunLoop runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.1]];
+                                w++;
+                                NSLog(@"While Img Loop:%i", w);
+                            }
+                            
+                            NSLog(@"Done Img");
+                            
+                        }
+                    }
+                    
+                    
+                    NSMutableArray *transformatorsMutable = [NSMutableArray arrayWithArray:_transformators];
+                    [transformatorsMutable removeObjectAtIndex:0];
+                    _transformators = transformatorsMutable;
+                    [self.tableView reloadData];
+                    
+                    done = YES;
+                    
+                } else {
+                    
+                    [[ENAuth alloc] reAuthWithResponseObject:responseObject];
+                    
+                    NSString *error = [responseObject objectForKey:@"error"];
+                    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Error" message:error delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+                    [alertView show];
+                    
+                    done = YES;
+                }
                 
-                [[ENAuth alloc] reAuthWithResponseObject:responseObject];
-                
-                NSString *error = [responseObject objectForKey:@"error"];
-                UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Error" message:error delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+            } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+                UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Error" message:[error localizedDescription] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
                 [alertView show];
+                
+                done = YES;
+            }];
+            
+            int o = 0;
+            
+            while (!done)
+            {
+                [NSRunLoop.currentRunLoop runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.1]];
+                o++;
+                NSLog(@"While Loop:%i", o);
             }
             
-        } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-            UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Error" message:[error localizedDescription] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-            [alertView show];
-        }];
-    } else {
-        [self loadInitialData];
+            NSLog(@"All Done");
+            
+            //transformator sync block end
+        }
     }
     
     [[UIApplication sharedApplication] endIgnoringInteractionEvents];
@@ -275,10 +384,6 @@
         NSString *transf = [NSString stringWithFormat:@"%@",[[_transformators objectAtIndex:indexPath.row-1] objectForKey:@"id"]];
         [parameters setObject:transf forKey:@"transf"];
         
-        NSMutableArray *transformatorsMutable = [NSMutableArray arrayWithArray:_transformators];
-        [transformatorsMutable removeObjectAtIndex:indexPath.row-1];
-        _transformators = transformatorsMutable;
-        
         // NSLog(@"Delete Transformer params: %@",parameters);
         
         AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
@@ -292,6 +397,13 @@
                 
                 [[ENAuth alloc] reAuthWithResponseObject:responseObject];
                 
+                NSMutableArray *transformatorsMutable = [NSMutableArray arrayWithArray:_transformators];
+                [transformatorsMutable removeObjectAtIndex:indexPath.row-1];
+                _transformators = transformatorsMutable;
+                
+                // Delete the row from the data source
+                [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
+                
             } else {
                 NSString *error = [responseObject objectForKey:@"error"];
                 UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Error" message:error delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
@@ -303,9 +415,6 @@
             UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Error" message:[error localizedDescription] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
             [alertView show];
         }];
-        
-        // Delete the row from the data source
-        [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
     }
 }
 

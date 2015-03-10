@@ -46,12 +46,12 @@
         }
     } else if (_descriptionField) {
         _selectedValue = [ENTransformator parseDescriptionForField:_descriptionField forTransformator:_transformator];
-        NSString *selectedValueStr = [NSString stringWithFormat:@"%@",_selectedValue];
+
         NSString *propertyName = [_descriptionField objectForKey:@"name"];
         self.navigationItem.title = propertyName;
         self.navigationItem.leftBarButtonItem = nil;
         self.label.text = @"Наберите описание или продиктуйте";
-        if (![selectedValueStr isEqualToString:@""]) {
+        if (_selectedValue) {
             self.textView.text = [NSString stringWithFormat:@"%@",_selectedValue];
         }
         [self.textView sizeToFit];
@@ -72,14 +72,6 @@
         }
     }
     self.textView.delegate = self;
-}
-
-- (BOOL)textViewShouldBeginEditing:(UITextView *)textView {
-    return YES;
-}
-
-- (void) showKeyboard {
-
 }
 
 - (void)didReceiveMemoryWarning {

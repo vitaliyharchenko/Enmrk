@@ -42,5 +42,9 @@
 + (NSMutableDictionary *)editTransformator:(NSMutableDictionary *)transformator setValue:(NSString *)value forField:(NSDictionary *)selectedProperty;
 + (NSMutableDictionary *)editTransformator:(NSMutableDictionary *)transformator setStatus:(NSNumber *)statusId forPlayground:(NSDictionary *)selectedPlayground;
 + (NSMutableDictionary *)editTransformator:(NSMutableDictionary *)transformator setPrice:(NSString *)price forPlayground:(NSDictionary *)selectedPlayground;
++ (NSMutableDictionary *)editTransformator:(NSMutableDictionary *)transformator addImg:(NSDictionary *)img;
++ (NSMutableDictionary *)editNewTransformator:(NSMutableDictionary *)transformator addImgData:(NSData *)imageData andImsType:(NSDictionary *)imsType;
++ (NSMutableDictionary *)editTransformator:(NSMutableDictionary *)transformator deleteImg:(NSDictionary *)deleteImg;
+
 
 @end
