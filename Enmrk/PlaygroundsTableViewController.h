@@ -17,6 +17,5 @@
 @property (strong,nonatomic) NSArray *properties;
 
 - (IBAction)unwindToList:(UIStoryboardSegue *)segue;
-- (void)reloadData;
 
 @end
