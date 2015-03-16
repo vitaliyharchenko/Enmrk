@@ -11,6 +11,15 @@
 #import "ENAuth.h"
 #import "ENTransformator.h"
 #import "MainTableViewController.h"
+#import "FDKeychain.h"
+
+
+#pragma mark Constants
+
+static NSString * const KeychainItem_Service = @"ENmrk";
+static NSString * const KeychainItem_Key_LocalPassword = @"LocalPassword";
+static NSString * const KeychainItem_Key_LocalLogin = @"LocalLogin";
+
 
 @interface LoginViewController ()
 
@@ -30,6 +39,19 @@
                                    action:@selector(dismissKeyboard)];
     
     [self.view addGestureRecognizer:tap];
+    
+    NSString *password = [FDKeychain itemForKey: KeychainItem_Key_LocalPassword
+                                               forService: KeychainItem_Service
+                                                    error: nil];
+    NSString *login = [FDKeychain itemForKey: KeychainItem_Key_LocalLogin
+                                     forService: KeychainItem_Service
+                                          error: nil];
+    
+    if (password && login) {
+        [_loginField setText:login];
+        [_passwordField setText:password];
+        [self loginButton:self];
+    }
 }
 
 -(void)dismissKeyboard {

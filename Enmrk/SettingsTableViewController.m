@@ -8,6 +8,14 @@
 
 #import "SettingsTableViewController.h"
 #import "AppDelegate.h"
+#import "FDKeychain.h"
+
+#pragma mark Constants
+
+static NSString * const KeychainItem_Service = @"ENmrk";
+static NSString * const KeychainItem_Key_LocalPassword = @"LocalPassword";
+static NSString * const KeychainItem_Key_LocalLogin = @"LocalLogin";
+
 
 @interface SettingsTableViewController ()
 
@@ -17,6 +25,8 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    self.navigationItem.title = @"Настройки";
     
     // Uncomment the following line to preserve selection between presentations.
     // self.clearsSelectionOnViewWillAppear = NO;
@@ -88,6 +98,16 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     if ([indexPath row] == 2) {
+        NSError *error;
+        [FDKeychain deleteItemForKey: KeychainItem_Key_LocalPassword
+                          forService: KeychainItem_Service
+                               error: &error];
+        
+        NSError *error1;
+        [FDKeychain deleteItemForKey: KeychainItem_Key_LocalLogin
+                          forService: KeychainItem_Service
+                               error: &error1];
+        
         AppDelegate *app = [[UIApplication sharedApplication] delegate];
         [app initWindowWithLogin];
     }

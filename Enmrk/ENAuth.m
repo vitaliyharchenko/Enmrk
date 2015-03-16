@@ -10,6 +10,15 @@
 #import "NSString+MD5.h"
 #import <CommonCrypto/CommonCryptor.h>
 #import <Foundation/Foundation.h>
+#import "FDKeychain.h"
+
+
+#pragma mark Constants
+
+static NSString * const KeychainItem_Service = @"ENmrk";
+static NSString * const KeychainItem_Key_LocalPassword = @"LocalPassword";
+static NSString * const KeychainItem_Key_LocalLogin = @"LocalLogin";
+
 
 @implementation ENAuth
 
@@ -37,6 +46,19 @@
     [registerDefaults setObject:md5pass forKey:@"ENSettingMD5Password"];
     [userDefaults registerDefaults:registerDefaults];
     [userDefaults synchronize];
+    
+    NSError *error;
+    [FDKeychain saveItem: password
+                  forKey: KeychainItem_Key_LocalPassword
+              forService: KeychainItem_Service
+                   error: &error];
+    
+    NSError *error1;
+    [FDKeychain saveItem: login
+                  forKey: KeychainItem_Key_LocalLogin
+              forService: KeychainItem_Service
+                   error: &error1];
+    
 }
 
 + (NSDictionary *)parametersForAPI {

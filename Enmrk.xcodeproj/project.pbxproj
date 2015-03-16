@@ -22,7 +22,9 @@
 		C77DAA5D1A85DCCA00DFD536 /* EnmrkTests.m in Sources */ = {isa = PBXBuildFile; fileRef = C77DAA5C1A85DCCA00DFD536 /* EnmrkTests.m */; };
 		C77DAA681A85DE0C00DFD536 /* LoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C77DAA671A85DE0C00DFD536 /* LoginViewController.m */; };
 		C79CF57A1AAE0D5300C75BCC /* ImageTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = C79CF5791AAE0D5300C75BCC /* ImageTableViewCell.m */; };
+		C7A9592B1AAF73AD00DB99B1 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C7A9592A1AAF73AD00DB99B1 /* Security.framework */; };
 		C7B41B051A95130200F39175 /* ENAuth.m in Sources */ = {isa = PBXBuildFile; fileRef = C7B41B041A95130200F39175 /* ENAuth.m */; };
+		C7B76E341AB2ECE50064A49E /* FDKeychain.m in Sources */ = {isa = PBXBuildFile; fileRef = C7B76E331AB2ECE50064A49E /* FDKeychain.m */; };
 		C7BDAC691A9CCCD200E2FDC3 /* DetailTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C7BDAC681A9CCCD200E2FDC3 /* DetailTableViewController.m */; };
 		C7D697BC1AA05AF100670644 /* ImagesTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C7D697BB1AA05AF100670644 /* ImagesTableViewController.m */; };
 		C7D697BF1AA0613400670644 /* ImageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C7D697BE1AA0613400670644 /* ImageViewController.m */; };
@@ -90,8 +92,12 @@
 		C77DAA671A85DE0C00DFD536 /* LoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoginViewController.m; sourceTree = "<group>"; };
 		C79CF5781AAE0D5300C75BCC /* ImageTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImageTableViewCell.h; sourceTree = "<group>"; };
 		C79CF5791AAE0D5300C75BCC /* ImageTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ImageTableViewCell.m; sourceTree = "<group>"; };
+		C7A959291AAF72FF00DB99B1 /* Enmrk.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = Enmrk.entitlements; sourceTree = "<group>"; };
+		C7A9592A1AAF73AD00DB99B1 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		C7B41B031A95130200F39175 /* ENAuth.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ENAuth.h; sourceTree = "<group>"; };
 		C7B41B041A95130200F39175 /* ENAuth.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ENAuth.m; sourceTree = "<group>"; };
+		C7B76E321AB2ECE50064A49E /* FDKeychain.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FDKeychain.h; sourceTree = "<group>"; };
+		C7B76E331AB2ECE50064A49E /* FDKeychain.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FDKeychain.m; sourceTree = "<group>"; };
 		C7BDAC671A9CCCD200E2FDC3 /* DetailTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DetailTableViewController.h; sourceTree = "<group>"; };
 		C7BDAC681A9CCCD200E2FDC3 /* DetailTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DetailTableViewController.m; sourceTree = "<group>"; };
 		C7D697BA1AA05AF100670644 /* ImagesTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImagesTableViewController.h; sourceTree = "<group>"; };
@@ -152,6 +158,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C7A9592B1AAF73AD00DB99B1 /* Security.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -176,6 +183,8 @@
 				C7220FA71AA36FE1003456C4 /* ResetViewController.m */,
 				C77DAA661A85DE0C00DFD536 /* LoginViewController.h */,
 				C77DAA671A85DE0C00DFD536 /* LoginViewController.m */,
+				C7B76E321AB2ECE50064A49E /* FDKeychain.h */,
+				C7B76E331AB2ECE50064A49E /* FDKeychain.m */,
 			);
 			name = Login;
 			sourceTree = "<group>";
@@ -201,6 +210,7 @@
 		C77DAA3C1A85DCCA00DFD536 /* Enmrk */ = {
 			isa = PBXGroup;
 			children = (
+				C7A959291AAF72FF00DB99B1 /* Enmrk.entitlements */,
 				C7220FAF1AA379B7003456C4 /* Login */,
 				C77DAA411A85DCCA00DFD536 /* AppDelegate.h */,
 				C77DAA421A85DCCA00DFD536 /* AppDelegate.m */,
@@ -241,6 +251,7 @@
 		C77DAA3D1A85DCCA00DFD536 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				C7A9592A1AAF73AD00DB99B1 /* Security.framework */,
 				C77DAA3E1A85DCCA00DFD536 /* Info.plist */,
 				C77DAA3F1A85DCCA00DFD536 /* main.m */,
 			);
@@ -378,6 +389,11 @@
 					C77DAA391A85DCCA00DFD536 = {
 						CreatedOnToolsVersion = 6.1.1;
 						DevelopmentTeam = Y3W7N9BNH9;
+						SystemCapabilities = {
+							com.apple.Keychain = {
+								enabled = 1;
+							};
+						};
 					};
 					C77DAA551A85DCCA00DFD536 = {
 						CreatedOnToolsVersion = 6.1.1;
@@ -465,6 +481,7 @@
 				C79CF57A1AAE0D5300C75BCC /* ImageTableViewCell.m in Sources */,
 				C7E198771A8CB3E0001B5A03 /* UIImageView+AFNetworking.m in Sources */,
 				C77DAA401A85DCCA00DFD536 /* main.m in Sources */,
+				C7B76E341AB2ECE50064A49E /* FDKeychain.m in Sources */,
 				C7FB91031A85E83F0040CC76 /* ENTransformator.m in Sources */,
 				C7FB91091A8697310040CC76 /* AddViewController.m in Sources */,
 			);
@@ -582,10 +599,13 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = Enmrk/Enmrk.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				INFOPLIST_FILE = Enmrk/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 			};
 			name = Debug;
 		};
@@ -593,10 +613,13 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = Enmrk/Enmrk.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				INFOPLIST_FILE = Enmrk/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 			};
 			name = Release;
 		};

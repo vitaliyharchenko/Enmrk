@@ -103,7 +103,7 @@
     int newCount = 0;
     int k;
     for (k=0; k<_transformators.count; k++) {
-        NSDictionary *transformator = [_transformators objectAtIndex:0];
+        NSDictionary *transformator = [_transformators objectAtIndex:k];
         NSString *name = [transformator objectForKey:@"name"];
         if (!name) {
             newCount++;
@@ -149,7 +149,7 @@
             
             [manager POST:@"http://enmrk.ru/api/transformers/add/" parameters:parameters success:^(AFHTTPRequestOperation *operation, id responseObject) {
                 
-                NSLog(@"Sync Transformers: %@",responseObject);
+                // NSLog(@"Sync Transformers: %@",responseObject);
                 
                 NSString *status = [responseObject objectForKey:@"status"];
                 
@@ -159,80 +159,6 @@
                     _currentId = insertedId;
                     
                     [[ENAuth alloc] reAuthWithResponseObject:responseObject];
-                    
-#warning sync ims
-                    
-                    NSArray *ims = [transformator objectForKey:@"ims"];
-                    if (ims) {
-                        int r;
-                        for (r=0; r<ims.count; r++) {
-                            
-                            __block BOOL doneImg = NO;
-                            
-                            //image sync block begin
-                            
-                            NSDictionary *img = [ims objectAtIndex:r];
-                            
-                            AFHTTPRequestOperationManager *manager = [[AFHTTPRequestOperationManager alloc] init];
-                            manager.responseSerializer.acceptableContentTypes = [NSSet setWithObject:@"text/html"];
-                            manager.responseSerializer = [AFJSONResponseSerializer serializerWithReadingOptions:NSJSONReadingAllowFragments];
-                            
-                            NSMutableDictionary *parameters = [NSMutableDictionary dictionaryWithDictionary:[ENAuth parametersForAPI]];
-                            [parameters setObject:@"editTransformer" forKey:@"act"];
-                            
-                            [parameters setObject:@"add" forKey:@"ims[0][act]"];
-                            [parameters setObject:[NSString stringWithFormat:@"%@",[img objectForKey:@"type"]] forKey:@"ims[0][type]"];
-                            [parameters setObject:@"photo" forKey:@"ims[0][fileid]"];
-                            [parameters setObject:[NSString stringWithFormat:@"%@",_currentId] forKey:@"transf"];
-                            
-                            NSData *imageData = [img objectForKey:@"image"];
-                            
-                            AFHTTPRequestOperation *op = [manager POST:@"http://enmrk.ru/api/transformers/add/" parameters:parameters constructingBodyWithBlock:^(id<AFMultipartFormData> formData) {
-                                //do not put image inside parameters dictionary as I did, but append it!
-                                [formData appendPartWithFileData:imageData name:@"photo" fileName:@"photo.png" mimeType:@"image/png"];
-                            } success:^(AFHTTPRequestOperation *operation, id responseObject) {
-                                NSString *status = [responseObject objectForKey:@"status"];
-                                
-                                if ([status isEqualToString:@"OK"]) {
-                                    
-                                    [[ENAuth alloc] reAuthWithResponseObject:responseObject];
-                                    
-                                    doneImg = YES;
-                                    
-                                } else {
-                                    [[ENAuth alloc] reAuthWithResponseObject:responseObject];
-                                    NSString *error = [responseObject objectForKey:@"error"];
-                                    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Error" message:error delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-                                    [alertView show];
-                                    
-                                    doneImg = YES;
-                                }
-                                
-                            } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-                                UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Error" message:[error localizedDescription] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-                                [alertView show];
-                                NSLog(@"%@",error);
-                                
-                                doneImg = YES;
-                            }];
-                            [op start];
-                            
-                            //image sync block end
-                            
-                            int w = 0;
-                            
-                            while (!doneImg)
-                            {
-                                [NSRunLoop.currentRunLoop runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.1]];
-                                w++;
-                                NSLog(@"While Img Loop:%i", w);
-                            }
-                            
-                            NSLog(@"Done Img");
-                            
-                        }
-                    }
-                    
                     
                     NSMutableArray *transformatorsMutable = [NSMutableArray arrayWithArray:_transformators];
                     [transformatorsMutable removeObjectAtIndex:0];
@@ -268,10 +194,91 @@
                 NSLog(@"While Loop:%i", o);
             }
             
-            NSLog(@"All Done");
+            //transformator img sync block start
+            
+            NSArray *ims = [transformator objectForKey:@"ims"];
+            if (ims) {
+                
+                __block BOOL doneImg = NO;
+                
+                NSMutableDictionary *parameters = [NSMutableDictionary dictionaryWithDictionary:[ENAuth parametersForAPI]];
+                [parameters setObject:@"editTransformer" forKey:@"act"];
+                [parameters setObject:[NSString stringWithFormat:@"%@",_currentId] forKey:@"transf"];
+                
+                __block int r;
+                for (r=0; r<ims.count; r++) {
+                    NSDictionary *img = [ims objectAtIndex:r];
+                    [parameters setObject:@"add" forKey:[NSString stringWithFormat:@"ims[%d][act]",r]];
+                    [parameters setObject:[NSString stringWithFormat:@"%@",[img objectForKey:@"type"]] forKey:[NSString stringWithFormat:@"ims[%d][type]",r]];
+                    [parameters setObject:[NSString stringWithFormat:@"photo%d",r] forKey:[NSString stringWithFormat:@"ims[%d][fileid]",r]];
+                }
+                
+                AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+                manager.responseSerializer.acceptableContentTypes = [NSSet setWithObject:@"text/html"];
+                manager.responseSerializer = [AFJSONResponseSerializer serializerWithReadingOptions:NSJSONReadingAllowFragments];
+                
+                
+                AFHTTPRequestOperation *op = [manager POST:@"http://enmrk.ru/api/transformers/add/" parameters:parameters constructingBodyWithBlock:^(id<AFMultipartFormData> formData) {
+                    
+                    for (r=0; r<ims.count; r++) {
+                        NSDictionary *img = [ims objectAtIndex:r];
+                        NSData *imageData = [img objectForKey:@"image"];
+                        [formData appendPartWithFileData:imageData name:[NSString stringWithFormat:@"photo%d",r] fileName:@"photo.jpg" mimeType:@"image/png"];
+                    }
+                    
+                } success:^(AFHTTPRequestOperation *operation, id responseObject) {
+                    // NSLog(@"[UploadVC] success = %@", responseObject);
+                    
+                    NSString *status = [responseObject objectForKey:@"status"];
+                    
+                    if ([status isEqualToString:@"OK"]) {
+                        
+                        [[ENAuth alloc] reAuthWithResponseObject:responseObject];
+                        
+                        doneImg = YES;
+                        
+                    } else {
+                        [[ENAuth alloc] reAuthWithResponseObject:responseObject];
+                        NSString *error = [responseObject objectForKey:@"error"];
+                        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Error" message:error delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+                        [alertView show];
+                        
+                        doneImg = YES;
+                    }
+                    
+                } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+                    // NSLog(@"[UploadVC] error = %@", error);
+                    
+                    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Error" message:[error localizedDescription] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+                    [alertView show];
+                    NSLog(@"%@",error);
+                    
+                    doneImg = YES;
+                }];
+                [op start];
+                
+                
+                int w = 0;
+                
+                while (!doneImg)
+                {
+                    [NSRunLoop.currentRunLoop runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.1]];
+                    w++;
+//                    NSLog(@"While Img Loop:%i", w);
+                }
+                
+                
+            }
+            
+            //transformator img sync block end
+            
             
             //transformator sync block end
         }
+        [self loadInitialData];
+        
+    } else {
+        [self loadInitialData];
     }
     
     [[UIApplication sharedApplication] endIgnoringInteractionEvents];
