@@ -464,13 +464,13 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <prototypes>
-                            <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Image Cell 1" id="Rq6-et-ZDa" customClass="ImageTableViewCell">
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Image Cell 1" rowHeight="400" id="Rq6-et-ZDa" customClass="ImageTableViewCell">
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Rq6-et-ZDa" id="JaB-M3-DhI">
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <imageView userInteractionEnabled="NO" contentMode="redraw" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" placeholderIntrinsicWidth="584" placeholderIntrinsicHeight="383" translatesAutoresizingMaskIntoConstraints="NO" id="EWt-RP-JYH">
-                                            <rect key="frame" x="8" y="13" width="584" height="383"/>
+                                        <imageView userInteractionEnabled="NO" contentMode="redraw" horizontalHuggingPriority="251" verticalHuggingPriority="251" placeholderIntrinsicWidth="584" placeholderIntrinsicHeight="383" translatesAutoresizingMaskIntoConstraints="NO" id="EWt-RP-JYH">
+                                            <rect key="frame" x="8" y="8" width="584" height="383"/>
                                             <constraints>
                                                 <constraint firstAttribute="height" constant="383" id="N13-7y-nTI"/>
                                             </constraints>
@@ -787,7 +787,7 @@
                                     <constraint firstAttribute="height" constant="35" id="dtQ-g0-WJE"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences" keyboardType="alphabet"/>
                                 <variation key="default">
                                     <mask key="constraints">
                                         <exclude reference="dtQ-g0-WJE"/>
